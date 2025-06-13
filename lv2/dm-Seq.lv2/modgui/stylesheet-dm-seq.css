@@ -1,0 +1,328 @@
+/* STYLES FOR THE BOXY PEDAL */
+
+@import url(/fonts/nexa/stylesheet.css);
+@import url(/fonts/questrial/stylesheet.css);
+
+.mod-pedal{{{cns}}} .row {
+    display: flex;
+    flex-direction: row;
+    margin: 0px;
+}
+
+.mod-pedal{{{cns}}} .column {
+    display: flex;
+    flex-direction: column;
+}
+
+.mod-pedal{{{cns}}} .gap {
+    gap: 8px;
+}
+
+.mod-pedal{{{cns}}} .knobs, .gates { 
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px;
+    border-right: 2px solid #797979;
+}
+
+.mod-pedal{{{cns}}} .knobs {
+    border-bottom: 2px solid #797979;
+}
+
+.mod-pedal{{{cns}}} .global-controls {
+    padding: 32px;
+}
+
+.mod-pedal{{{cns}}} .logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: end;
+    gap: 16px;
+    /* justify-content: center; */
+}
+
+.mod-pedal{{{cns}}} .logo {
+    background-image:url(/resources/assets/logo.png{{{ns}}});
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size: 103px 51px;
+    width: 103px;
+    height: 51px;
+}
+
+.mod-pedal{{{cns}}} .mod-knob, .mod-slider, .mod-number-input {
+    z-index: 20;
+}
+
+.mod-pedal{{{cns}}} .unicode-symbol {
+    font-size: 22px;
+    vertical-align: text-top;
+    line-height: 18px;
+}
+
+/* = CONTAINER
+================================================ */
+.mod-pedal{{{cns}}} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 1266px;
+    height: 452px;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.mod-pedal{{{cns}}}::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 8px;
+    box-shadow: inset 8px 8px 8px 0 #141316, inset -8px -8px 8px 0 #141316;
+}
+
+/* = PARAMETER NAME
+================================================ */
+.mod-pedal{{{cns}}} .mod-param-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #ECECEC;
+    font-weight: 600;
+    margin-top: 1px;
+    font-size: 11.5px;
+}
+
+/* = KNOBS
+================================================ */
+.mod-pedal{{{cns}}} .mod-knob .mod-knob-image {
+    background-image:url(/resources/assets/knob.png{{{ns}}});
+    background-repeat:no-repeat;
+    background-size:auto 64px;
+    height:64px;
+    width:64px;
+    margin:0 auto;
+}
+
+
+/* = FOOTSWITCH
+================================================ */
+.mod-pedal{{{cns}}} .mod-footswitch {
+    position: relative;
+    background-image:url(/resources/assets/button.png{{{ns}}});
+    background-position:bottom center !important;
+    background-repeat:no-repeat;
+    background-size:auto 128px;
+    cursor:pointer;
+    height:64px;
+    width: 64px;
+}
+.mod-pedal{{{cns}}} .mod-footswitch.on {
+    background-position: top center !important;
+}
+.mod-pedal{{{cns}}} .mod-footswitch > .mod-light {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-100%, -50%);
+    background-image:url(/resources/assets/light.png{{{ns}}});
+    background-position:bottom center;
+    background-repeat:no-repeat;
+    background-size:auto 48px;
+    height:24px;
+    width:24px;
+}
+.mod-pedal{{{cns}}} .mod-footswitch.on > .mod-light {
+    background-position-y: top !important;
+}
+.mod-pedal{{{cns}}} .footswitches .mod-param-title {
+    margin-top: 8px;
+}
+.mod-pedal{{{cns}}} .mod-footswitch.bypass.on > .mod-light {
+    background-position-y: bottom !important;
+}
+.mod-pedal{{{cns}}} .mod-footswitch.bypass.off > .mod-light {
+    background-position-y: top !important;
+}
+.mod-pedal{{{cns}}} .mod-footswitch.bypass.on {
+    background-position-y: bottom !important;
+}
+.mod-pedal{{{cns}}} .mod-footswitch.bypass.off {
+    background-position-y: top !important;
+}
+
+/* = TOGGLE
+================================================ */
+.mod-pedal{{{cns}}} .toggle {
+    cursor: pointer;
+    background-image:url(/resources/assets/toggle.png{{{ns}}});
+    background-repeat:no-repeat;
+    background-size:64px 256px;
+    height:64px;
+    width:64px;
+    margin:0 auto;
+    z-index: 20;
+}
+
+.mod-pedal{{{cns}}} .toggle.off {
+    background-position-y:top;
+}
+.mod-pedal{{{cns}}} .toggle.off.highlight {
+    background-position-y:bottom;
+}
+.mod-pedal{{{cns}}} .toggle.on {
+    background-position-y:-64px;
+}
+.mod-pedal{{{cns}}} .toggle.on.highlight {
+    background-position-y:-128px;
+}
+
+/* = NUMBER INPUT
+================================================ */
+.mod-pedal{{{cns}}} .mod-number-input .mod-number-input-image {
+    background-image:url(/resources/assets/number-input.png{{{ns}}});
+    background-repeat:no-repeat;
+    background-size:auto 32px;
+    height:32px;
+    width:48px;
+    margin:0 auto;
+}
+
+.mod-pedal{{{cns}}} .mod-number-input > .mod-param-title {
+    margin-top: 8px;
+}
+
+/* = ENUMERATED LIST
+================================================ */
+.mod-pedal{{{cns}}} .mod-enumerated-group {
+    width:128px;
+    height:28px;
+    z-index: 35;
+    border: 2px solid #797979;
+    border-radius: 8px;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated {
+    position: relative;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 10px;
+    color:#ECECEC;
+    text-align: left;
+    text-transform: uppercase;
+    padding: 8px;
+    margin-right: 12px;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated::after {
+    content: "▼";
+    position: absolute;
+    top: 8px;
+    right: -8px;
+    color: #ECECEC;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated .mod-enumerated-selected {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated .mod-enumerated-list {
+    display:none;
+    color:#ECECEC;
+    background-color:#211F24;
+    width:128px;
+    height: auto;
+    max-height: 138px;
+    overflow:auto;
+    position: absolute;
+    top: 28px;
+    left: -2px;
+    border: 2px solid #797979;
+    border-radius: 8px;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated .mod-enumerated-list > div {
+    padding: 8px;
+    background-color: #211F24;
+    border-bottom: 2px solid #797979;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated .mod-enumerated-list > div:last-child {
+    border-bottom: none;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated .mod-enumerated-list > div:hover {
+    background-color:#797979;
+    cursor:pointer;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated-group .mod-param-title {
+    margin-top: 11px;
+}
+
+/* = TABS
+================================================ */
+.mod-pedal{{{cns}}} .mod-tabs-container {
+    position: relative;
+    z-index: 20;
+}
+
+.mod-pedal{{{cns}}} .mod-tabs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    height: 64px;
+}
+
+.mod-pedal{{{cns}}} .mod-tabs > .mod-tab {
+    width: 80px;
+    height: 28px;
+    line-height: 25px;
+    border: 2.5px solid #797979;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    color: #ECECEC;
+    cursor: default;
+}
+
+.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:nth-child(1) {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: none;
+}
+
+.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:nth-child(2) {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.mod-pedal{{{cns}}} .mod-tabs > .mod-tab.selected {
+    color: #211F24;
+    background-color: #0CC0C0;
+}
+
+/* = BACKGROUND IMAGES - Background of the pedal
+================================================ */
+.mod-pedal{{{cns}}} {
+    background: #211F24;
+}
+
+/* = COLORS - Color of the pedals labels
+================================================ */
+.mod-pedal{{{cns}}} .mod-enumerated,
+{
+    color:#ECECEC;
+}
+.mod-pedal{{{cns}}} h1
+{
+    border-color: #ECECEC;
+}

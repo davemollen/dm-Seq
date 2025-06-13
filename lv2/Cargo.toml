@@ -1,0 +1,14 @@
+[package]
+name = "dm_seq"
+version = "0.1.0"
+authors = ["davemollen <davemollen@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+lv2 = { git = "https://github.com/davemollen/rust-lv2.git", branch = "master", features = [
+    "full", "wmidi"
+] }
+wmidi = "3.1.0"
+
+[lib]
+crate-type = ["cdylib"]
