@@ -5,7 +5,6 @@ mod synced_phasor;
 mod update_position;
 use crate::{map_sequencer_data::SequencerData, phasor::Phasor};
 use lv2::prelude::*;
-use std::{ffi::CStr, mem};
 
 use {
   synced_phasor::SyncedPhasor,
