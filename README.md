@@ -1,6 +1,6 @@
 ## dm-Seq
 
-A monophonic sequencer effect written in Rust.
+A monophonic step sequencer effect written in Rust.
 The effect can be compiled to a [Mod devices](https://moddevices.com/) or lv2 plugin.
 
 ## Table of contents:

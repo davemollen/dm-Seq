@@ -1,12 +1,12 @@
+mod map_current_step_to_reordered_step;
 mod map_sequencer_data;
 mod map_step_duration_to_division;
 mod phasor;
 mod synced_phasor;
 mod update_position;
-use crate::{map_sequencer_data::SequencerData, phasor::Phasor};
-use lv2::prelude::*;
-
 use {
+  crate::{map_sequencer_data::SequencerData, phasor::Phasor},
+  lv2::prelude::*,
   synced_phasor::SyncedPhasor,
   wmidi::{Channel, MidiMessage, Note, Velocity},
 };
@@ -79,18 +79,12 @@ pub struct InitFeatures<'a> {
   map: LV2Map<'a>,
 }
 
-#[derive(FeatureCollection)]
-pub struct AudioFeatures<'a> {
-  log: Log<'a>,
-}
-
 #[derive(URIDCollection)]
 pub struct URIDs {
   atom: AtomURIDCollection,
   midi: MidiURIDCollection,
   unit: UnitURIDCollection,
   time: TimeURIDCollection,
-  log: LogURIDCollection,
 }
 
 #[uri("https://github.com/davemollen/dm-Seq")]
@@ -106,12 +100,13 @@ struct DmSeq {
   prev_step_progress: f32,
   phasor: Phasor,
   is_activated: bool,
+  shuffled_steps: Vec<usize>,
 }
 
 impl Plugin for DmSeq {
   type Ports = Ports;
   type InitFeatures = InitFeatures<'static>;
-  type AudioFeatures = AudioFeatures<'static>;
+  type AudioFeatures = ();
 
   fn new(plugin_info: &PluginInfo, features: &mut Self::InitFeatures) -> Option<Self> {
     let sample_rate = plugin_info.sample_rate() as f32;
@@ -128,6 +123,7 @@ impl Plugin for DmSeq {
       prev_step_progress: 0.,
       phasor: Phasor::new(sample_rate),
       is_activated: false,
+      shuffled_steps: Vec::with_capacity(16),
     })
   }
 
@@ -135,6 +131,8 @@ impl Plugin for DmSeq {
     if self.is_activated {
       let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
       self.step_progress_phasor.set_initial_speed(speed);
+      self.set_shuffled_steps(*ports.steps as usize);
+      self.is_activated = false;
     }
 
     let SequencerData {
@@ -195,16 +193,16 @@ impl Plugin for DmSeq {
         next_step
       };
 
-      let current_note = notes[self.current_step];
-      let current_velocity = velocities[self.current_step];
-      let current_gate = gates[self.current_step];
-      **ports.current_step = self.current_step as f32;
+      let reordered_step =
+        self.map_current_step_to_reordered_step(*ports.order as u8, *ports.steps as usize);
+      let current_note = notes[reordered_step];
+      let current_velocity = velocities[reordered_step];
+      let current_gate = gates[reordered_step];
+      **ports.current_step = reordered_step as f32;
 
-      if !current_gate
-        || current_velocity == 0
-        || self
-          .prev_current_note
-          .map_or(false, |prev_current_note| current_note == prev_current_note)
+      if self
+        .prev_current_note
+        .map_or(false, |prev_current_note| current_note == prev_current_note)
       {
         return;
       }
@@ -230,19 +228,20 @@ impl Plugin for DmSeq {
           )
           .unwrap();
       }
-      midi_out_sequence
-        .init(
-          TimeStamp::Frames(0),
-          self.urids.midi.wmidi,
-          MidiMessage::NoteOn(
-            Channel::from_index(*ports.midi_channel as u8).unwrap(),
-            Note::try_from(current_note).unwrap(),
-            Velocity::try_from(current_velocity).unwrap(),
-          ),
-        )
-        .unwrap();
-
-      self.prev_current_note = Some(current_note);
+      if current_gate || current_velocity > 0 {
+        midi_out_sequence
+          .init(
+            TimeStamp::Frames(0),
+            self.urids.midi.wmidi,
+            MidiMessage::NoteOn(
+              Channel::from_index(*ports.midi_channel as u8).unwrap(),
+              Note::try_from(current_note).unwrap(),
+              Velocity::try_from(current_velocity).unwrap(),
+            ),
+          )
+          .unwrap();
+        self.prev_current_note = Some(current_note);
+      }
     }
   }
 
