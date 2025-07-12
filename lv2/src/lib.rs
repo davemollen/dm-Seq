@@ -17,6 +17,7 @@ struct Ports {
   steps: InputPort<Control>,
   step_duration: InputPort<Control>,
   clock_mode: InputPort<Control>,
+  order: InputPort<Control>,
   knob_target: InputPort<Control>,
   bpm: InputPort<Control>,
   note_1: InputPort<Control>,

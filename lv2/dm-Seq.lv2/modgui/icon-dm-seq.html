@@ -3,30 +3,32 @@
   <div class="row">
     <div class="column">
       <div class="row knobs">
-        <div class="mod-tabs-container">
-          <div
-            class="mod-tabs"
-            mod-role="input-control-port"
-            mod-port-symbol="knob_target"
-            mod-widget="custom-select"
-          >
+        <div class="space-before-grid">
+          <div class="mod-tabs-container">
             <div
-              class="mod-tab"
-              mod-role="enumeration-option"
-              mod-port-value="0"
+              class="mod-tabs"
+              mod-role="input-control-port"
+              mod-port-symbol="knob_target"
+              mod-widget="custom-select"
             >
-              PITCH
-            </div>
-            <div
-              class="mod-tab"
-              mod-role="enumeration-option"
-              mod-port-value="1"
-            >
-              VELOCITY
+              <div
+                class="mod-tab"
+                mod-role="enumeration-option"
+                mod-port-value="0"
+              >
+                PITCH
+              </div>
+              <div
+                class="mod-tab"
+                mod-role="enumeration-option"
+                mod-port-value="1"
+              >
+                VELOCITY
+              </div>
             </div>
           </div>
         </div>
-        <div class="column gap">
+        <div id="notes" class="column gap">
           <div class="row gap">
             <div class="mod-knob">
               <div
@@ -144,17 +146,137 @@
             </div>
           </div>
         </div>
+        <div id="velocities" class="column gap">
+          <div class="row gap">
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_1"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_2"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_3"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_4"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_5"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_6"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_7"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_8"
+              ></div>
+            </div>
+          </div>
+          <div class="row gap">
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_9"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_10"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_11"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_12"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_13"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_14"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_15"
+              ></div>
+            </div>
+            <div class="mod-knob">
+              <div
+                class="mod-knob-image"
+                mod-role="input-control-port"
+                mod-port-symbol="velocity_16"
+              ></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row gates">
-        <div>
-          <div
-            class="mod-footswitch on"
-            mod-role="input-control-port"
-            mod-port-symbol="trigger"
-          >
-            <div class="mod-light"></div>
+        <div class="space-before-grid">
+          <div>
+            <div
+              class="mod-footswitch on"
+              mod-role="input-control-port"
+              mod-port-symbol="trigger"
+            >
+              <div class="mod-light"></div>
+            </div>
+            <div class="mod-param-title">TRIGGER</div>
           </div>
-          <div class="mod-param-title">TRIGGER</div>
         </div>
 
         <div class="column gap">
@@ -278,14 +400,104 @@
       </div>
     </div>
     <div class="column global-controls">
-      <div class="row">
-        <div class="mod-knob">
-          <div
-            class="mod-knob-image"
-            mod-role="input-control-port"
-            mod-port-symbol="steps"
-          ></div>
-          <div class="mod-param-title">STEPS</div>
+      <div class="row gap">
+        <div class="column gap">
+          <div class="mod-knob">
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
+              mod-port-symbol="steps"
+            ></div>
+            <div class="mod-param-title">STEPS</div>
+          </div>
+          <div class="mod-number-input">
+            <div
+              class="mod-number-input-image"
+              mod-role="input-control-port"
+              mod-port-symbol="bpm"
+            ></div>
+            <div class="mod-param-title">BPM</div>
+          </div>
+        </div>
+        <div class="column gap">
+          <div class="mod-enumerated-group-container">
+            {{#controls.2}}
+            <div class="mod-enumerated-group first">
+              <div
+                class="mod-enumerated"
+                mod-role="input-control-port"
+                mod-port-symbol="{{symbol}}"
+                mod-widget="custom-select"
+              >
+                <div
+                  mod-role="input-control-value"
+                  mod-port-symbol="{{symbol}}"
+                  class="mod-enumerated-selected"
+                ></div>
+                <div class="mod-enumerated-list">
+                  {{#scalePoints}}
+                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
+                    {{label}}
+                  </div>
+                  {{/scalePoints}}
+                </div>
+              </div>
+            </div>
+            <div class="mod-param-title">{{name}}</div>
+            {{/controls.2}}
+          </div>
+          <div class="mod-enumerated-group-container">
+            {{#controls.3}}
+            <div class="mod-enumerated-group second">
+              <div
+                class="mod-enumerated"
+                mod-role="input-control-port"
+                mod-port-symbol="{{symbol}}"
+                mod-widget="custom-select"
+              >
+                <div
+                  mod-role="input-control-value"
+                  mod-port-symbol="{{symbol}}"
+                  class="mod-enumerated-selected"
+                ></div>
+                <div class="mod-enumerated-list">
+                  {{#scalePoints}}
+                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
+                    {{label}}
+                  </div>
+                  {{/scalePoints}}
+                </div>
+              </div>
+            </div>
+            <div class="mod-param-title">{{name}}</div>
+            {{/controls.3}}
+          </div>
+          <div class="mod-enumerated-group-container">
+            {{#controls.4}}
+            <div class="mod-enumerated-group third">
+              <div
+                class="mod-enumerated"
+                mod-role="input-control-port"
+                mod-port-symbol="{{symbol}}"
+                mod-widget="custom-select"
+              >
+                <div
+                  mod-role="input-control-value"
+                  mod-port-symbol="{{symbol}}"
+                  class="mod-enumerated-selected"
+                ></div>
+                <div class="mod-enumerated-list">
+                  {{#scalePoints}}
+                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
+                    {{label}}
+                  </div>
+                  {{/scalePoints}}
+                </div>
+              </div>
+            </div>
+            <div class="mod-param-title">{{name}}</div>
+            {{/controls.4}}
+          </div>
         </div>
       </div>
       <div class="logo-container">
@@ -299,67 +511,67 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="mod-pedal-input">
-      {{#effect.ports.audio.input}}
-      <div
-        class="mod-input mod-input-disconnected"
-        title="{{name}}"
-        mod-role="input-audio-port"
-        mod-port-symbol="{{symbol}}"
-      >
-        <div class="mod-pedal-input-image"></div>
+      <div class="mod-pedal-input">
+        {{#effect.ports.audio.input}}
+        <div
+          class="mod-input mod-input-disconnected"
+          title="{{name}}"
+          mod-role="input-audio-port"
+          mod-port-symbol="{{symbol}}"
+        >
+          <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.audio.input}} {{#effect.ports.midi.input}}
+        <div
+          class="mod-input mod-input-disconnected"
+          title="{{name}}"
+          mod-role="input-midi-port"
+          mod-port-symbol="{{symbol}}"
+        >
+          <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.midi.input}} {{#effect.ports.cv.input}}
+        <div
+          class="mod-input mod-input-disconnected"
+          title="{{name}}"
+          mod-role="input-cv-port"
+          mod-port-symbol="{{symbol}}"
+        >
+          <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.cv.input}}
       </div>
-      {{/effect.ports.audio.input}} {{#effect.ports.midi.input}}
-      <div
-        class="mod-input mod-input-disconnected"
-        title="{{name}}"
-        mod-role="input-midi-port"
-        mod-port-symbol="{{symbol}}"
-      >
-        <div class="mod-pedal-input-image"></div>
+      <div class="mod-pedal-output">
+        {{#effect.ports.audio.output}}
+        <div
+          class="mod-output mod-output-disconnected"
+          title="{{name}}"
+          mod-role="output-audio-port"
+          mod-port-symbol="{{symbol}}"
+        >
+          <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.audio.output}} {{#effect.ports.midi.output}}
+        <div
+          class="mod-output mod-output-disconnected"
+          title="{{name}}"
+          mod-role="output-midi-port"
+          mod-port-symbol="{{symbol}}"
+        >
+          <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.midi.output}} {{#effect.ports.cv.output}}
+        <div
+          class="mod-output mod-output-disconnected"
+          title="{{name}}"
+          mod-role="output-cv-port"
+          mod-port-symbol="{{symbol}}"
+        >
+          <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.cv.output}}
       </div>
-      {{/effect.ports.midi.input}} {{#effect.ports.cv.input}}
-      <div
-        class="mod-input mod-input-disconnected"
-        title="{{name}}"
-        mod-role="input-cv-port"
-        mod-port-symbol="{{symbol}}"
-      >
-        <div class="mod-pedal-input-image"></div>
-      </div>
-      {{/effect.ports.cv.input}}
-    </div>
-    <div class="mod-pedal-output">
-      {{#effect.ports.audio.output}}
-      <div
-        class="mod-output mod-output-disconnected"
-        title="{{name}}"
-        mod-role="output-audio-port"
-        mod-port-symbol="{{symbol}}"
-      >
-        <div class="mod-pedal-output-image"></div>
-      </div>
-      {{/effect.ports.audio.output}} {{#effect.ports.midi.output}}
-      <div
-        class="mod-output mod-output-disconnected"
-        title="{{name}}"
-        mod-role="output-midi-port"
-        mod-port-symbol="{{symbol}}"
-      >
-        <div class="mod-pedal-output-image"></div>
-      </div>
-      {{/effect.ports.midi.output}} {{#effect.ports.cv.output}}
-      <div
-        class="mod-output mod-output-disconnected"
-        title="{{name}}"
-        mod-role="output-cv-port"
-        mod-port-symbol="{{symbol}}"
-      >
-        <div class="mod-pedal-output-image"></div>
-      </div>
-      {{/effect.ports.cv.output}}
     </div>
   </div>
 </div>

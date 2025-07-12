@@ -15,13 +15,25 @@
 }
 
 .mod-pedal{{{cns}}} .gap {
-    gap: 8px;
+    gap: 16px;
+}
+
+.mod-pedal{{{cns}}} .space-before-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 16px;
+    width: 80px;
+}
+
+.mod-pedal{{{cns}}} .hide {
+    display: none;
 }
 
 .mod-pedal{{{cns}}} .knobs, .gates { 
     align-items: center;
     justify-content: space-between;
-    padding: 32px;
+    padding: 24px;
     border-right: 2px solid #797979;
 }
 
@@ -30,16 +42,20 @@
 }
 
 .mod-pedal{{{cns}}} .global-controls {
-    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 12px 24px;
 }
 
 .mod-pedal{{{cns}}} .logo-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    align-self: end;
-    gap: 16px;
-    /* justify-content: center; */
+    gap: 12px;
+    margin-bottom: -12px;
 }
 
 .mod-pedal{{{cns}}} .logo {
@@ -67,8 +83,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 1266px;
-    height: 452px;
+    width: 1074px;
+    height: 404px;
     border-radius: 8px;
     padding: 8px;
 }
@@ -95,6 +111,7 @@
     font-weight: 600;
     margin-top: 1px;
     font-size: 11.5px;
+    text-transform: uppercase;
 }
 
 /* = KNOBS
@@ -186,7 +203,7 @@
 .mod-pedal{{{cns}}} .mod-number-input .mod-number-input-image {
     background-image:url(/resources/assets/number-input.png{{{ns}}});
     background-repeat:no-repeat;
-    background-size:auto 32px;
+    background-size:12528px 32px;
     height:32px;
     width:48px;
     margin:0 auto;
@@ -198,12 +215,29 @@
 
 /* = ENUMERATED LIST
 ================================================ */
+.mod-pedal{{{cns}}} .mod-enumerated-group-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .mod-pedal{{{cns}}} .mod-enumerated-group {
     width:128px;
     height:28px;
     z-index: 35;
     border: 2px solid #797979;
     border-radius: 8px;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated-group.first {
+    z-index: 37;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated-group.second {
+    z-index: 36;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated-group.third {
+    z-index: 35;
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated {
