@@ -15,9 +15,11 @@ use {
 struct Ports {
   trigger: InputPort<Control>,
   steps: InputPort<Control>,
+  swing: InputPort<Control>,
   step_duration: InputPort<Control>,
   clock_mode: InputPort<Control>,
   order: InputPort<Control>,
+  repeat_mode: InputPort<Control>,
   knob_target: InputPort<Control>,
   bpm: InputPort<Control>,
   note_1: InputPort<Control>,
@@ -198,11 +200,15 @@ impl Plugin for DmSeq {
       let current_note = notes[reordered_step];
       let current_velocity = velocities[reordered_step];
       let current_gate = gates[reordered_step];
+      let has_note_on = current_velocity > 0 && current_gate;
       **ports.current_step = reordered_step as f32;
 
-      if self
-        .prev_current_note
-        .map_or(false, |prev_current_note| current_note == prev_current_note)
+      // skip repeated midi note if in legato mode
+      if *ports.repeat_mode == 0.
+        && has_note_on
+        && self
+          .prev_current_note
+          .map_or(false, |prev_current_note| current_note == prev_current_note)
       {
         return;
       }
@@ -228,7 +234,7 @@ impl Plugin for DmSeq {
           )
           .unwrap();
       }
-      if current_gate || current_velocity > 0 {
+      if has_note_on {
         midi_out_sequence
           .init(
             TimeStamp::Frames(0),
