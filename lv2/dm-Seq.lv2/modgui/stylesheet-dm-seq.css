@@ -14,6 +14,14 @@
     flex-direction: column;
 }
 
+.mod-pedal{{{cns}}} .justify-center {
+    justify-content: center;
+}
+
+.mod-pedal{{{cns}}} .justify-between {
+    justify-content: space-between;
+}
+
 .mod-pedal{{{cns}}} .gap {
     gap: 16px;
 }
@@ -31,9 +39,10 @@
 }
 
 .mod-pedal{{{cns}}} .knobs, .gates { 
+    flex: 1;
     align-items: center;
     justify-content: space-between;
-    padding: 24px;
+    padding: 16px;
     border-right: 2px solid #797979;
 }
 
@@ -47,15 +56,18 @@
     flex: 1 1 0;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 12px 24px;
+    padding: 24px 16px 24px;
+}
+
+.mod-pedal{{{cns}}} .global-controls > .row > .column {
+    gap: 8px;
 }
 
 .mod-pedal{{{cns}}} .logo-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    margin-bottom: -12px;
+    gap: 8px;
 }
 
 .mod-pedal{{{cns}}} .logo {
@@ -84,7 +96,7 @@
     display: flex;
     flex-direction: column;
     width: 1074px;
-    height: 404px;
+    height: 466px;
     border-radius: 8px;
     padding: 8px;
 }
@@ -210,7 +222,7 @@
 }
 
 .mod-pedal{{{cns}}} .mod-number-input > .mod-param-title {
-    margin-top: 8px;
+    margin-top: 1px;
 }
 
 /* = ENUMERATED LIST
@@ -229,14 +241,18 @@
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated-group.first {
-    z-index: 37;
+    z-index: 38;
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated-group.second {
-    z-index: 36;
+    z-index: 37;
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated-group.third {
+    z-index: 36;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated-group.fourth {
     z-index: 35;
 }
 

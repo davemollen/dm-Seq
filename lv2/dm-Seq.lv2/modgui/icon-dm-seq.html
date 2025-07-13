@@ -1,7 +1,7 @@
 <div class="mod-pedal mod-pedal{{{cns}}}">
   <div mod-role="drag-handle" class="mod-drag-handle"></div>
   <div class="row">
-    <div class="column">
+    <div class="column justify-center">
       <div class="row knobs">
         <div class="space-before-grid">
           <div class="mod-tabs-container">
@@ -399,9 +399,9 @@
         </div>
       </div>
     </div>
-    <div class="column global-controls">
+    <div class="column global-controls gap">
       <div class="row gap">
-        <div class="column gap">
+        <div class="column">
           <div class="mod-knob">
             <div
               class="mod-knob-image"
@@ -409,6 +409,14 @@
               mod-port-symbol="steps"
             ></div>
             <div class="mod-param-title">STEPS</div>
+          </div>
+          <div class="mod-knob">
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
+              mod-port-symbol="swing"
+            ></div>
+            <div class="mod-param-title">SWING</div>
           </div>
           <div class="mod-number-input">
             <div
@@ -419,36 +427,10 @@
             <div class="mod-param-title">BPM</div>
           </div>
         </div>
-        <div class="column gap">
-          <div class="mod-enumerated-group-container">
-            {{#controls.2}}
-            <div class="mod-enumerated-group first">
-              <div
-                class="mod-enumerated"
-                mod-role="input-control-port"
-                mod-port-symbol="{{symbol}}"
-                mod-widget="custom-select"
-              >
-                <div
-                  mod-role="input-control-value"
-                  mod-port-symbol="{{symbol}}"
-                  class="mod-enumerated-selected"
-                ></div>
-                <div class="mod-enumerated-list">
-                  {{#scalePoints}}
-                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
-                    {{label}}
-                  </div>
-                  {{/scalePoints}}
-                </div>
-              </div>
-            </div>
-            <div class="mod-param-title">{{name}}</div>
-            {{/controls.2}}
-          </div>
+        <div class="column justify-between">
           <div class="mod-enumerated-group-container">
             {{#controls.3}}
-            <div class="mod-enumerated-group second">
+            <div class="mod-enumerated-group first">
               <div
                 class="mod-enumerated"
                 mod-role="input-control-port"
@@ -474,7 +456,7 @@
           </div>
           <div class="mod-enumerated-group-container">
             {{#controls.4}}
-            <div class="mod-enumerated-group third">
+            <div class="mod-enumerated-group second">
               <div
                 class="mod-enumerated"
                 mod-role="input-control-port"
@@ -497,6 +479,58 @@
             </div>
             <div class="mod-param-title">{{name}}</div>
             {{/controls.4}}
+          </div>
+          <div class="mod-enumerated-group-container">
+            {{#controls.5}}
+            <div class="mod-enumerated-group third">
+              <div
+                class="mod-enumerated"
+                mod-role="input-control-port"
+                mod-port-symbol="{{symbol}}"
+                mod-widget="custom-select"
+              >
+                <div
+                  mod-role="input-control-value"
+                  mod-port-symbol="{{symbol}}"
+                  class="mod-enumerated-selected"
+                ></div>
+                <div class="mod-enumerated-list">
+                  {{#scalePoints}}
+                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
+                    {{label}}
+                  </div>
+                  {{/scalePoints}}
+                </div>
+              </div>
+            </div>
+            <div class="mod-param-title">{{name}}</div>
+            {{/controls.5}}
+          </div>
+          <div class="mod-enumerated-group-container">
+            {{#controls.6}}
+            <div class="mod-enumerated-group fourth">
+              <div
+                class="mod-enumerated"
+                mod-role="input-control-port"
+                mod-port-symbol="{{symbol}}"
+                mod-widget="custom-select"
+              >
+                <div
+                  mod-role="input-control-value"
+                  mod-port-symbol="{{symbol}}"
+                  class="mod-enumerated-selected"
+                ></div>
+                <div class="mod-enumerated-list">
+                  {{#scalePoints}}
+                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
+                    {{label}}
+                  </div>
+                  {{/scalePoints}}
+                </div>
+              </div>
+            </div>
+            <div class="mod-param-title">{{name}}</div>
+            {{/controls.6}}
           </div>
         </div>
       </div>
