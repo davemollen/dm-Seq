@@ -1,7 +1,6 @@
 use {
-  crate::{AudioFeatures, DmSeq, Ports},
+  crate::{DmSeq, Ports},
   lv2::lv2_atom::object::ObjectReader,
-  std::ffi::CStr,
 };
 
 pub struct SequencerData {

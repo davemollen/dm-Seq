@@ -7,9 +7,9 @@ pub struct SyncedPhasor {
 impl SyncedPhasor {
   pub fn new() -> Self {
     Self {
-      last_ramp: 0.0,
-      phase: 0.0,
-      speed: 1.0,
+      last_ramp: 0.,
+      phase: 0.,
+      speed: 1.,
     }
   }
 

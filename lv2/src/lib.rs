@@ -79,18 +79,12 @@ pub struct InitFeatures<'a> {
   map: LV2Map<'a>,
 }
 
-#[derive(FeatureCollection)]
-pub struct AudioFeatures<'a> {
-  log: Log<'a>,
-}
-
 #[derive(URIDCollection)]
 pub struct URIDs {
   atom: AtomURIDCollection,
   midi: MidiURIDCollection,
   unit: UnitURIDCollection,
   time: TimeURIDCollection,
-  log: LogURIDCollection,
 }
 
 #[uri("https://github.com/davemollen/dm-Seq")]
@@ -114,7 +108,7 @@ struct DmSeq {
 impl Plugin for DmSeq {
   type Ports = Ports;
   type InitFeatures = InitFeatures<'static>;
-  type AudioFeatures = AudioFeatures<'static>;
+  type AudioFeatures = ();
 
   fn new(plugin_info: &PluginInfo, features: &mut Self::InitFeatures) -> Option<Self> {
     let sample_rate = plugin_info.sample_rate() as f32;
