@@ -1,11 +1,9 @@
-mod map_current_step_to_reordered_step;
-mod map_sequencer_data;
-mod map_step_duration_to_division;
+mod delta;
 mod phasor;
 mod synced_phasor;
-mod update_position;
+mod utils;
 use {
-  crate::{map_sequencer_data::SequencerData, phasor::Phasor},
+  crate::{delta::Delta, phasor::Phasor, utils::SequencerData},
   lv2::prelude::*,
   synced_phasor::SyncedPhasor,
   wmidi::{Channel, MidiMessage, Note, Velocity},
@@ -81,12 +79,18 @@ pub struct InitFeatures<'a> {
   map: LV2Map<'a>,
 }
 
+#[derive(FeatureCollection)]
+pub struct AudioFeatures<'a> {
+  log: Log<'a>,
+}
+
 #[derive(URIDCollection)]
 pub struct URIDs {
   atom: AtomURIDCollection,
   midi: MidiURIDCollection,
   unit: UnitURIDCollection,
   time: TimeURIDCollection,
+  log: LogURIDCollection,
 }
 
 #[uri("https://github.com/davemollen/dm-Seq")]
@@ -99,16 +103,18 @@ struct DmSeq {
   host_speed: f32,
   beat: f32,
   step_progress_phasor: SyncedPhasor,
-  prev_step_progress: f32,
+  step_progress_delta: Delta,
   phasor: Phasor,
   is_activated: bool,
   shuffled_steps: Vec<usize>,
+  is_in_swing_cycle: bool,
+  swing_delta: Delta,
 }
 
 impl Plugin for DmSeq {
   type Ports = Ports;
   type InitFeatures = InitFeatures<'static>;
-  type AudioFeatures = ();
+  type AudioFeatures = AudioFeatures<'static>;
 
   fn new(plugin_info: &PluginInfo, features: &mut Self::InitFeatures) -> Option<Self> {
     let sample_rate = plugin_info.sample_rate() as f32;
@@ -122,10 +128,12 @@ impl Plugin for DmSeq {
       host_speed: 0.,
       beat: 0.,
       step_progress_phasor: SyncedPhasor::new(),
-      prev_step_progress: 0.,
+      step_progress_delta: Delta::new(),
       phasor: Phasor::new(sample_rate),
       is_activated: false,
       shuffled_steps: Vec::with_capacity(16),
+      is_in_swing_cycle: true,
+      swing_delta: Delta::new(),
     })
   }
 
@@ -135,6 +143,10 @@ impl Plugin for DmSeq {
       self.step_progress_phasor.set_initial_speed(speed);
       self.set_shuffled_steps(*ports.steps as usize);
       self.is_activated = false;
+    }
+
+    if self.host_speed == 0. {
+      self.handle_transport_stopped(ports);
     }
 
     let SequencerData {
@@ -171,8 +183,7 @@ impl Plugin for DmSeq {
         // Host sync
         let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
         let step_progress = self.step_progress_phasor.process(self.beat, speed);
-        let trigger = (step_progress - self.prev_step_progress) < 0.;
-        self.prev_step_progress = step_progress;
+        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
         trigger
       }
       2. => {
@@ -180,8 +191,7 @@ impl Plugin for DmSeq {
         let speed_factor = self.map_step_duration_to_divisor(*ports.step_duration) / 4.;
         let freq = *ports.bpm / 60. * speed_factor;
         let step_progress = self.phasor.process(freq, sample_count);
-        let trigger = (step_progress - self.prev_step_progress) < 0.;
-        self.prev_step_progress = step_progress;
+        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
         trigger
       }
       _ => false,

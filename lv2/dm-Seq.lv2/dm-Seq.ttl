@@ -51,7 +51,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:symbol "swing";
 		lv2:name "Swing";
 		lv2:default 0.0;
-		lv2:minimum 1.0;
+		lv2:minimum 0.0;
 		lv2:maximum 1.0;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
