@@ -139,14 +139,14 @@ impl DmSeq {
   }
 
   pub fn map_current_step_to_reordered_step(&mut self, order: u8, steps: usize) -> usize {
-    match order {
+    let reordered_step = match order {
       1 => {
         // reverse
         steps - self.current_step - 1
       }
       2 => {
         // shuffle
-        if self.current_step == 0 {
+        if self.current_step == 0 || steps != self.prev_steps {
           self.set_shuffled_steps(steps);
         }
         self.shuffled_steps[self.current_step]
@@ -156,7 +156,9 @@ impl DmSeq {
         fastrand::usize(0..steps)
       }
       _ => self.current_step,
-    }
+    };
+    self.prev_steps = steps;
+    return reordered_step;
   }
 
   pub fn set_shuffled_steps(&mut self, steps: usize) {

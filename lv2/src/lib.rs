@@ -18,7 +18,7 @@ struct Ports {
   clock_mode: InputPort<Control>,
   order: InputPort<Control>,
   repeat_mode: InputPort<Control>,
-  knob_target: InputPort<Control>,
+  _knob_target: InputPort<Control>,
   bpm: InputPort<Control>,
   note_1: InputPort<Control>,
   note_2: InputPort<Control>,
@@ -75,6 +75,11 @@ struct Ports {
 }
 
 #[derive(FeatureCollection)]
+pub struct AudioFeatures<'a> {
+  log: Log<'a>,
+}
+
+#[derive(FeatureCollection)]
 pub struct InitFeatures<'a> {
   map: LV2Map<'a>,
 }
@@ -85,6 +90,7 @@ pub struct URIDs {
   midi: MidiURIDCollection,
   unit: UnitURIDCollection,
   time: TimeURIDCollection,
+  log: LogURIDCollection,
 }
 
 #[uri("https://github.com/davemollen/dm-Seq")]
@@ -99,16 +105,17 @@ struct DmSeq {
   step_progress_phasor: SyncedPhasor,
   step_progress_delta: Delta,
   phasor: Phasor,
-  is_activated: bool,
+  is_initialized: bool,
   shuffled_steps: Vec<usize>,
   is_in_swing_cycle: bool,
   swing_delta: Delta,
+  prev_steps: usize,
 }
 
 impl Plugin for DmSeq {
   type Ports = Ports;
   type InitFeatures = InitFeatures<'static>;
-  type AudioFeatures = ();
+  type AudioFeatures = AudioFeatures<'static>;
 
   fn new(plugin_info: &PluginInfo, features: &mut Self::InitFeatures) -> Option<Self> {
     let sample_rate = plugin_info.sample_rate() as f32;
@@ -117,32 +124,22 @@ impl Plugin for DmSeq {
       current_step: 15,
       prev_current_note: None,
       urids: features.map.populate_collection()?,
-      host_div: 1,
+      host_div: 4,
       host_bpm: 120.,
       host_speed: 0.,
       beat: 0.,
       step_progress_phasor: SyncedPhasor::new(),
       step_progress_delta: Delta::new(),
       phasor: Phasor::new(sample_rate),
-      is_activated: false,
+      is_initialized: false,
       shuffled_steps: Vec::with_capacity(16),
       is_in_swing_cycle: true,
       swing_delta: Delta::new(),
+      prev_steps: 8,
     })
   }
 
   fn run(&mut self, ports: &mut Ports, _features: &mut Self::AudioFeatures, sample_count: u32) {
-    if self.is_activated {
-      let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
-      self.step_progress_phasor.set_initial_speed(speed);
-      self.set_shuffled_steps(*ports.steps as usize);
-      self.is_activated = false;
-    }
-
-    if self.host_speed == 0. {
-      self.handle_transport_stopped(ports);
-    }
-
     let SequencerData {
       notes,
       velocities,
@@ -166,6 +163,19 @@ impl Plugin for DmSeq {
           self.update_position(object_reader);
         }
       }
+    }
+
+    if !self.is_initialized {
+      let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
+      self.step_progress_phasor.set_initial_speed(speed);
+      self.set_shuffled_steps(*ports.steps as usize);
+      self.is_initialized = true;
+      self.prev_steps = *ports.steps as usize;
+    }
+
+    if self.host_speed == 0. {
+      self.handle_transport_stopped(ports);
+      return;
     }
 
     let trigger = match *ports.clock_mode {
@@ -256,11 +266,7 @@ impl Plugin for DmSeq {
   }
 
   fn activate(&mut self, _features: &mut Self::InitFeatures) {
-    self.is_activated = true;
-  }
-
-  fn deactivate(&mut self, _features: &mut Self::InitFeatures) {
-    self.is_activated = false;
+    self.is_initialized = false;
   }
 }
 
