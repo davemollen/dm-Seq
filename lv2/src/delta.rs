@@ -3,8 +3,8 @@ pub struct Delta {
 }
 
 impl Delta {
-  pub fn new() -> Self {
-    Self { z: 0. }
+  pub fn new(initial_value: f32) -> Self {
+    Self { z: initial_value }
   }
 
   pub fn process(&mut self, input: f32) -> f32 {

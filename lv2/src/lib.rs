@@ -11,6 +11,7 @@ use {
 
 #[derive(PortCollection)]
 struct Ports {
+  enable: InputPort<Control>,
   trigger: InputPort<Control>,
   steps: InputPort<Control>,
   swing: InputPort<Control>,
@@ -97,7 +98,7 @@ pub struct URIDs {
 struct DmSeq {
   current_step: usize,
   urids: URIDs,
-  prev_current_note: Option<u8>,
+  prev_note: Option<u8>,
   host_div: i32,
   host_bpm: f32,
   host_speed: f32,
@@ -122,19 +123,19 @@ impl Plugin for DmSeq {
 
     Some(Self {
       current_step: 15,
-      prev_current_note: None,
+      prev_note: None,
       urids: features.map.populate_collection()?,
       host_div: 4,
       host_bpm: 120.,
       host_speed: 0.,
       beat: 0.,
       step_progress_phasor: SyncedPhasor::new(),
-      step_progress_delta: Delta::new(),
+      step_progress_delta: Delta::new(1.),
       phasor: Phasor::new(sample_rate),
       is_initialized: false,
       shuffled_steps: Vec::with_capacity(16),
       is_in_swing_cycle: true,
-      swing_delta: Delta::new(),
+      swing_delta: Delta::new(1.),
       prev_steps: 8,
     })
   }
@@ -178,30 +179,7 @@ impl Plugin for DmSeq {
       return;
     }
 
-    let trigger = match *ports.clock_mode {
-      0. => {
-        // Trigger mode
-        *ports.trigger == 1.
-      }
-      1. => {
-        // Host sync
-        let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
-        let step_progress = self.step_progress_phasor.process(self.beat, speed);
-        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
-        trigger
-      }
-      2. => {
-        // Free running
-        let speed_factor = self.map_step_duration_to_divisor(*ports.step_duration) / 4.;
-        let freq = *ports.bpm / 60. * speed_factor;
-        let step_progress = self.phasor.process(freq, sample_count);
-        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
-        trigger
-      }
-      _ => false,
-    };
-
-    if trigger {
+    if self.get_trigger(ports, sample_count) {
       let next_step = self.current_step + 1;
       self.current_step = if next_step >= *ports.steps as usize {
         0
@@ -217,16 +195,6 @@ impl Plugin for DmSeq {
       let has_note_on = current_velocity > 0 && current_gate;
       **ports.current_step = reordered_step as f32;
 
-      // skip repeated midi note if in legato mode
-      if *ports.repeat_mode == 0.
-        && has_note_on
-        && self
-          .prev_current_note
-          .map_or(false, |prev_current_note| current_note == prev_current_note)
-      {
-        return;
-      }
-
       let mut midi_out_sequence = match ports.midi_out.init(
         self.urids.atom.sequence,
         TimeStampURID::Frames(self.urids.unit.frame),
@@ -235,18 +203,47 @@ impl Plugin for DmSeq {
         None => return,
       };
 
-      if let Some(prev_current_note) = self.prev_current_note {
+      if *ports.enable == 0. {
+        if let Some(prev_note) = self.prev_note {
+          midi_out_sequence
+            .init(
+              TimeStamp::Frames(0),
+              self.urids.midi.wmidi,
+              MidiMessage::NoteOff(
+                Channel::from_index(*ports.midi_channel as u8).unwrap(),
+                Note::try_from(prev_note).unwrap(),
+                Velocity::try_from(0).unwrap(),
+              ),
+            )
+            .unwrap();
+          self.prev_note = None;
+        }
+        return;
+      }
+
+      // skip repeated midi note if in legato mode
+      if *ports.repeat_mode == 0.
+        && has_note_on
+        && self
+          .prev_note
+          .map_or(false, |prev_note| current_note == prev_note)
+      {
+        return;
+      }
+
+      if let Some(prev_note) = self.prev_note {
         midi_out_sequence
           .init(
             TimeStamp::Frames(0),
             self.urids.midi.wmidi,
             MidiMessage::NoteOff(
               Channel::from_index(*ports.midi_channel as u8).unwrap(),
-              Note::try_from(prev_current_note).unwrap(),
+              Note::try_from(prev_note).unwrap(),
               Velocity::try_from(0).unwrap(),
             ),
           )
           .unwrap();
+        self.prev_note = None;
       }
       if has_note_on {
         midi_out_sequence
@@ -260,7 +257,7 @@ impl Plugin for DmSeq {
             ),
           )
           .unwrap();
-        self.prev_current_note = Some(current_note);
+        self.prev_note = Some(current_note);
       }
     }
   }

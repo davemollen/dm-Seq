@@ -213,7 +213,32 @@ impl DmSeq {
   pub fn handle_transport_stopped(&mut self, ports: &mut Ports) {
     self.current_step = 15;
     **ports.current_step = -1.;
-    self.prev_current_note = None;
+    self.prev_note = None;
     self.is_in_swing_cycle = true;
+  }
+
+  pub fn get_trigger(&mut self, ports: &mut Ports, sample_count: u32) -> bool {
+    match *ports.clock_mode {
+      0. => {
+        // Trigger mode
+        *ports.trigger == 1.
+      }
+      1. => {
+        // Host sync
+        let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
+        let step_progress = self.step_progress_phasor.process(self.beat, speed);
+        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
+        trigger
+      }
+      2. => {
+        // Free running
+        let speed_factor = self.map_step_duration_to_divisor(*ports.step_duration) / 4.;
+        let freq = *ports.bpm / 60. * speed_factor;
+        let step_progress = self.phasor.process(freq, sample_count);
+        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
+        trigger
+      }
+      _ => false,
+    }
   }
 }

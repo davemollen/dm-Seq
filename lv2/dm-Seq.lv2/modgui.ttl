@@ -13,7 +13,7 @@
         modgui:label "Seq" ;
         modgui:monitoredOutputs [ lv2:symbol "current_step" ] ;
         modgui:port [
-            lv2:index 2;
+            lv2:index 0;
             lv2:symbol "trigger";
             lv2:name "Trigger";
         ] , [
