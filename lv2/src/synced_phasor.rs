@@ -34,6 +34,10 @@ impl SyncedPhasor {
 
     return self.phase;
   }
+
+  pub fn reset(&mut self, value: f32) {
+    self.phase = value;
+  }
 }
 
 #[cfg(test)]

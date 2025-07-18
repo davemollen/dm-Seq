@@ -186,6 +186,14 @@ impl DmSeq {
           .read(self.urids.atom.float, ())
           .map_or(0., |beat| beat.fract());
       }
+      if property_header.key == self.urids.time.bar {
+        self.bar = property.read(self.urids.atom.long, ()).map_or(0, |bar| bar);
+      }
+      if property_header.key == self.urids.time.beats_per_bar {
+        self.beats_per_bar = property
+          .read(self.urids.atom.float, ())
+          .map_or(0., |bar| bar);
+      }
     }
   }
 
@@ -237,5 +245,27 @@ impl DmSeq {
       }
       _ => false,
     }
+  }
+
+  pub fn resync_on_reactivated_host_sync(&mut self, ports: &mut Ports) {
+    /*
+     *ports.clock_mode 1. equals Host Sync
+     Using enums instead are just not worth the hassle
+    */
+    if *ports.clock_mode == 1. && self.prev_clock_mode != 1. {
+      let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.beat_unit as f32;
+      let beats_in_bars = self.bar as f32 * self.beats_per_bar;
+      let total_beats = self.beat + beats_in_bars;
+      let total_steps = total_beats * speed;
+      let truncated_total_steps = total_steps.trunc();
+      let progress = total_steps - truncated_total_steps;
+
+      self.current_step = (truncated_total_steps % *ports.steps) as usize;
+      self.step_progress_phasor.set_initial_speed(speed);
+      self.step_progress_phasor.reset(progress);
+      self.step_progress_delta.reset(progress);
+      self.is_in_swing_cycle = self.current_step & 1 == 0;
+    }
+    self.prev_clock_mode = *ports.clock_mode
   }
 }

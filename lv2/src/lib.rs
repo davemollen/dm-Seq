@@ -100,7 +100,9 @@ struct DmSeq {
   urids: URIDs,
   prev_note: Option<u8>,
   host_speed: f32,
+  beats_per_bar: f32,
   beat_unit: i32,
+  bar: i64,
   beat: f32,
   step_progress_phasor: SyncedPhasor,
   step_progress_delta: Delta,
@@ -110,6 +112,7 @@ struct DmSeq {
   is_in_swing_cycle: bool,
   swing_delta: Delta,
   prev_steps: usize,
+  prev_clock_mode: f32,
 }
 
 impl Plugin for DmSeq {
@@ -125,7 +128,9 @@ impl Plugin for DmSeq {
       prev_note: None,
       urids: features.map.populate_collection()?,
       host_speed: 0.,
+      beats_per_bar: 4.,
       beat_unit: 4,
+      bar: 0,
       beat: 0.,
       step_progress_phasor: SyncedPhasor::new(),
       step_progress_delta: Delta::new(1.),
@@ -135,6 +140,7 @@ impl Plugin for DmSeq {
       is_in_swing_cycle: true,
       swing_delta: Delta::new(1.),
       prev_steps: 8,
+      prev_clock_mode: 1.,
     })
   }
 
@@ -170,12 +176,14 @@ impl Plugin for DmSeq {
       self.set_shuffled_steps(*ports.steps as usize);
       self.is_initialized = true;
       self.prev_steps = *ports.steps as usize;
+      self.prev_clock_mode = *ports.clock_mode;
     }
 
     if self.host_speed == 0. {
       self.handle_transport_stopped(ports);
       return;
     }
+    self.resync_on_reactivated_host_sync(ports);
 
     if self.get_trigger(ports, sample_count) {
       let next_step = self.current_step + 1;
