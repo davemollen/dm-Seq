@@ -176,10 +176,7 @@ impl DmSeq {
   pub fn update_position(&mut self, object_reader: ObjectReader<'static>) {
     for (property_header, property) in object_reader {
       if property_header.key == self.urids.time.beat_unit {
-        self.host_div = property.read(self.urids.atom.int, ()).unwrap_or(4);
-      }
-      if property_header.key == self.urids.time.beats_per_minute {
-        self.host_bpm = property.read(self.urids.atom.float, ()).unwrap_or(120.);
+        self.beat_unit = property.read(self.urids.atom.int, ()).unwrap_or(4);
       }
       if property_header.key == self.urids.time.speed {
         self.host_speed = property.read(self.urids.atom.float, ()).unwrap_or(0.);
@@ -220,18 +217,18 @@ impl DmSeq {
   pub fn get_trigger(&mut self, ports: &mut Ports, sample_count: u32) -> bool {
     match *ports.clock_mode {
       0. => {
-        // Trigger mode
+        // Trigger
         *ports.trigger == 1.
       }
       1. => {
-        // Host sync
-        let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
+        // Host Sync
+        let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.beat_unit as f32;
         let step_progress = self.step_progress_phasor.process(self.beat, speed);
         let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
         trigger
       }
       2. => {
-        // Free running
+        // Free Running
         let speed_factor = self.map_step_duration_to_divisor(*ports.step_duration) / 4.;
         let freq = *ports.bpm / 60. * speed_factor;
         let step_progress = self.phasor.process(freq, sample_count);

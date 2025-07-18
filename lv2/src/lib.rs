@@ -99,9 +99,8 @@ struct DmSeq {
   current_step: usize,
   urids: URIDs,
   prev_note: Option<u8>,
-  host_div: i32,
-  host_bpm: f32,
   host_speed: f32,
+  beat_unit: i32,
   beat: f32,
   step_progress_phasor: SyncedPhasor,
   step_progress_delta: Delta,
@@ -125,9 +124,8 @@ impl Plugin for DmSeq {
       current_step: 15,
       prev_note: None,
       urids: features.map.populate_collection()?,
-      host_div: 4,
-      host_bpm: 120.,
       host_speed: 0.,
+      beat_unit: 4,
       beat: 0.,
       step_progress_phasor: SyncedPhasor::new(),
       step_progress_delta: Delta::new(1.),
@@ -167,7 +165,7 @@ impl Plugin for DmSeq {
     }
 
     if !self.is_initialized {
-      let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.host_div as f32;
+      let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.beat_unit as f32;
       self.step_progress_phasor.set_initial_speed(speed);
       self.set_shuffled_steps(*ports.steps as usize);
       self.is_initialized = true;
