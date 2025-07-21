@@ -6,12 +6,11 @@ on:
 
 defaults:
   run:
-    # This otherwise gets run under dash which does not support brace expansion
     shell: bash
 
 env:
-  plugin_name: dm-Seq
   binary_name: dm_seq
+  plugin_name: dm-Seq
   mod_package_name: dm-seq
 
 jobs:
