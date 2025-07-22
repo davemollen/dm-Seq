@@ -25,7 +25,7 @@
 	rdfs:comment """
 A simple monophonic sequencer. You can sync this sequencer to the host bpm, use it in free running mode or go through the steps with a manual trigger.
 """;
-	lv2:requiredFeature lv2:urid:map, lv2:inPlaceBroken;
+	lv2:requiredFeature lv2:urid:map;
 	lv2:optionalFeature lv2:hardRTCapable;
 	lv2:port [
 		a lv2:InputPort,lv2:ControlPort ;

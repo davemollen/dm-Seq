@@ -14,99 +14,99 @@ impl DmSeq {
     // TODO: check for CPU
     // let notes: [u8; 16] = unsafe {
     //   mem::transmute_copy(&[
-    //     *ports.note_1,
-    //     *ports.note_2,
-    //     *ports.note_3,
-    //     *ports.note_4,
-    //     *ports.note_5,
-    //     *ports.note_6,
-    //     *ports.note_7,
-    //     *ports.note_8,
-    //     *ports.note_9,
-    //     *ports.note_10,
-    //     *ports.note_11,
-    //     *ports.note_12,
-    //     *ports.note_13,
-    //     *ports.note_14,
-    //     *ports.note_15,
-    //     *ports.note_16,
+    //     ports.note_1.get(),
+    //     ports.note_2.get(),
+    //     ports.note_3.get(),
+    //     ports.note_4.get(),
+    //     ports.note_5.get(),
+    //     ports.note_6.get(),
+    //     ports.note_7.get(),
+    //     ports.note_8.get(),
+    //     ports.note_9.get(),
+    //     ports.note_10.get(),
+    //     ports.note_11.get(),
+    //     ports.note_12.get(),
+    //     ports.note_13.get(),
+    //     ports.note_14.get(),
+    //     ports.note_15.get(),
+    //     ports.note_16.get(),
     //   ])
     // };
     // let velocities: [u8; 16] = unsafe {
     //   mem::transmute_copy(&[
-    //     *ports.velocity_1,
-    //     *ports.velocity_2,
-    //     *ports.velocity_3,
-    //     *ports.velocity_4,
-    //     *ports.velocity_5,
-    //     *ports.velocity_6,
-    //     *ports.velocity_7,
-    //     *ports.velocity_8,
-    //     *ports.velocity_9,
-    //     *ports.velocity_10,
-    //     *ports.velocity_11,
-    //     *ports.velocity_12,
-    //     *ports.velocity_13,
-    //     *ports.velocity_14,
-    //     *ports.velocity_15,
-    //     *ports.velocity_16,
+    //     ports.velocity_1.get(),
+    //     ports.velocity_2.get(),
+    //     ports.velocity_3.get(),
+    //     ports.velocity_4.get(),
+    //     ports.velocity_5.get(),
+    //     ports.velocity_6.get(),
+    //     ports.velocity_7.get(),
+    //     ports.velocity_8.get(),
+    //     ports.velocity_9.get(),
+    //     ports.velocity_10.get(),
+    //     ports.velocity_11.get(),
+    //     ports.velocity_12.get(),
+    //     ports.velocity_13.get(),
+    //     ports.velocity_14.get(),
+    //     ports.velocity_15.get(),
+    //     ports.velocity_16.get(),
     //   ])
     // };
     let notes = [
-      *ports.note_1,
-      *ports.note_2,
-      *ports.note_3,
-      *ports.note_4,
-      *ports.note_5,
-      *ports.note_6,
-      *ports.note_7,
-      *ports.note_8,
-      *ports.note_9,
-      *ports.note_10,
-      *ports.note_11,
-      *ports.note_12,
-      *ports.note_13,
-      *ports.note_14,
-      *ports.note_15,
-      *ports.note_16,
+      ports.note_1.get(),
+      ports.note_2.get(),
+      ports.note_3.get(),
+      ports.note_4.get(),
+      ports.note_5.get(),
+      ports.note_6.get(),
+      ports.note_7.get(),
+      ports.note_8.get(),
+      ports.note_9.get(),
+      ports.note_10.get(),
+      ports.note_11.get(),
+      ports.note_12.get(),
+      ports.note_13.get(),
+      ports.note_14.get(),
+      ports.note_15.get(),
+      ports.note_16.get(),
     ]
     .map(|note| note as u8);
     let velocities = [
-      *ports.velocity_1,
-      *ports.velocity_2,
-      *ports.velocity_3,
-      *ports.velocity_4,
-      *ports.velocity_5,
-      *ports.velocity_6,
-      *ports.velocity_7,
-      *ports.velocity_8,
-      *ports.velocity_9,
-      *ports.velocity_10,
-      *ports.velocity_11,
-      *ports.velocity_12,
-      *ports.velocity_13,
-      *ports.velocity_14,
-      *ports.velocity_15,
-      *ports.velocity_16,
+      ports.velocity_1.get(),
+      ports.velocity_2.get(),
+      ports.velocity_3.get(),
+      ports.velocity_4.get(),
+      ports.velocity_5.get(),
+      ports.velocity_6.get(),
+      ports.velocity_7.get(),
+      ports.velocity_8.get(),
+      ports.velocity_9.get(),
+      ports.velocity_10.get(),
+      ports.velocity_11.get(),
+      ports.velocity_12.get(),
+      ports.velocity_13.get(),
+      ports.velocity_14.get(),
+      ports.velocity_15.get(),
+      ports.velocity_16.get(),
     ]
     .map(|vel| vel as u8);
     let gates = [
-      *ports.gate_1 == 1.,
-      *ports.gate_2 == 1.,
-      *ports.gate_3 == 1.,
-      *ports.gate_4 == 1.,
-      *ports.gate_5 == 1.,
-      *ports.gate_6 == 1.,
-      *ports.gate_7 == 1.,
-      *ports.gate_8 == 1.,
-      *ports.gate_9 == 1.,
-      *ports.gate_10 == 1.,
-      *ports.gate_11 == 1.,
-      *ports.gate_12 == 1.,
-      *ports.gate_13 == 1.,
-      *ports.gate_14 == 1.,
-      *ports.gate_15 == 1.,
-      *ports.gate_16 == 1.,
+      ports.gate_1.get() == 1.,
+      ports.gate_2.get() == 1.,
+      ports.gate_3.get() == 1.,
+      ports.gate_4.get() == 1.,
+      ports.gate_5.get() == 1.,
+      ports.gate_6.get() == 1.,
+      ports.gate_7.get() == 1.,
+      ports.gate_8.get() == 1.,
+      ports.gate_9.get() == 1.,
+      ports.gate_10.get() == 1.,
+      ports.gate_11.get() == 1.,
+      ports.gate_12.get() == 1.,
+      ports.gate_13.get() == 1.,
+      ports.gate_14.get() == 1.,
+      ports.gate_15.get() == 1.,
+      ports.gate_16.get() == 1.,
     ];
 
     return SequencerData {
@@ -209,30 +209,31 @@ impl DmSeq {
 
   pub fn handle_transport_stopped(&mut self, ports: &mut Ports) {
     self.current_step = 15;
-    **ports.current_step = -1.;
+    ports.current_step.set(-1.);
     self.prev_note = None;
     self.is_in_swing_cycle = true;
   }
 
   pub fn get_trigger(&mut self, ports: &mut Ports, sample_count: u32) -> bool {
-    match *ports.clock_mode {
+    match ports.clock_mode.get() {
       0. => {
         // Trigger
-        *ports.trigger == 1.
+        ports.trigger.get() == 1.
       }
       1. => {
         // Host Sync
-        let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.beat_unit as f32;
+        let speed =
+          self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
         let step_progress = self.step_progress_phasor.process(self.beat, speed);
-        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
+        let trigger = self.map_step_progress_to_trigger(step_progress, ports.swing.get());
         trigger
       }
       2. => {
         // Free Running
-        let speed_factor = self.map_step_duration_to_divisor(*ports.step_duration) / 4.;
-        let freq = *ports.bpm / 60. * speed_factor;
+        let speed_factor = self.map_step_duration_to_divisor(ports.step_duration.get()) / 4.;
+        let freq = ports.bpm.get() / 60. * speed_factor;
         let step_progress = self.phasor.process(freq, sample_count);
-        let trigger = self.map_step_progress_to_trigger(step_progress, *ports.swing);
+        let trigger = self.map_step_progress_to_trigger(step_progress, ports.swing.get());
         trigger
       }
       _ => false,

@@ -11,66 +11,66 @@ use {
 
 #[derive(PortCollection)]
 struct Ports {
-  enable: InputPort<Control>,
-  trigger: InputPort<Control>,
-  steps: InputPort<Control>,
-  swing: InputPort<Control>,
-  step_duration: InputPort<Control>,
-  clock_mode: InputPort<Control>,
-  order: InputPort<Control>,
-  repeat_mode: InputPort<Control>,
-  _knob_target: InputPort<Control>,
-  bpm: InputPort<Control>,
-  note_1: InputPort<Control>,
-  note_2: InputPort<Control>,
-  note_3: InputPort<Control>,
-  note_4: InputPort<Control>,
-  note_5: InputPort<Control>,
-  note_6: InputPort<Control>,
-  note_7: InputPort<Control>,
-  note_8: InputPort<Control>,
-  note_9: InputPort<Control>,
-  note_10: InputPort<Control>,
-  note_11: InputPort<Control>,
-  note_12: InputPort<Control>,
-  note_13: InputPort<Control>,
-  note_14: InputPort<Control>,
-  note_15: InputPort<Control>,
-  note_16: InputPort<Control>,
-  velocity_1: InputPort<Control>,
-  velocity_2: InputPort<Control>,
-  velocity_3: InputPort<Control>,
-  velocity_4: InputPort<Control>,
-  velocity_5: InputPort<Control>,
-  velocity_6: InputPort<Control>,
-  velocity_7: InputPort<Control>,
-  velocity_8: InputPort<Control>,
-  velocity_9: InputPort<Control>,
-  velocity_10: InputPort<Control>,
-  velocity_11: InputPort<Control>,
-  velocity_12: InputPort<Control>,
-  velocity_13: InputPort<Control>,
-  velocity_14: InputPort<Control>,
-  velocity_15: InputPort<Control>,
-  velocity_16: InputPort<Control>,
-  gate_1: InputPort<Control>,
-  gate_2: InputPort<Control>,
-  gate_3: InputPort<Control>,
-  gate_4: InputPort<Control>,
-  gate_5: InputPort<Control>,
-  gate_6: InputPort<Control>,
-  gate_7: InputPort<Control>,
-  gate_8: InputPort<Control>,
-  gate_9: InputPort<Control>,
-  gate_10: InputPort<Control>,
-  gate_11: InputPort<Control>,
-  gate_12: InputPort<Control>,
-  gate_13: InputPort<Control>,
-  gate_14: InputPort<Control>,
-  gate_15: InputPort<Control>,
-  gate_16: InputPort<Control>,
-  midi_channel: InputPort<Control>,
-  current_step: OutputPort<Control>,
+  enable: InputPort<InPlaceControl>,
+  trigger: InputPort<InPlaceControl>,
+  steps: InputPort<InPlaceControl>,
+  swing: InputPort<InPlaceControl>,
+  step_duration: InputPort<InPlaceControl>,
+  clock_mode: InputPort<InPlaceControl>,
+  order: InputPort<InPlaceControl>,
+  repeat_mode: InputPort<InPlaceControl>,
+  _knob_target: InputPort<InPlaceControl>,
+  bpm: InputPort<InPlaceControl>,
+  note_1: InputPort<InPlaceControl>,
+  note_2: InputPort<InPlaceControl>,
+  note_3: InputPort<InPlaceControl>,
+  note_4: InputPort<InPlaceControl>,
+  note_5: InputPort<InPlaceControl>,
+  note_6: InputPort<InPlaceControl>,
+  note_7: InputPort<InPlaceControl>,
+  note_8: InputPort<InPlaceControl>,
+  note_9: InputPort<InPlaceControl>,
+  note_10: InputPort<InPlaceControl>,
+  note_11: InputPort<InPlaceControl>,
+  note_12: InputPort<InPlaceControl>,
+  note_13: InputPort<InPlaceControl>,
+  note_14: InputPort<InPlaceControl>,
+  note_15: InputPort<InPlaceControl>,
+  note_16: InputPort<InPlaceControl>,
+  velocity_1: InputPort<InPlaceControl>,
+  velocity_2: InputPort<InPlaceControl>,
+  velocity_3: InputPort<InPlaceControl>,
+  velocity_4: InputPort<InPlaceControl>,
+  velocity_5: InputPort<InPlaceControl>,
+  velocity_6: InputPort<InPlaceControl>,
+  velocity_7: InputPort<InPlaceControl>,
+  velocity_8: InputPort<InPlaceControl>,
+  velocity_9: InputPort<InPlaceControl>,
+  velocity_10: InputPort<InPlaceControl>,
+  velocity_11: InputPort<InPlaceControl>,
+  velocity_12: InputPort<InPlaceControl>,
+  velocity_13: InputPort<InPlaceControl>,
+  velocity_14: InputPort<InPlaceControl>,
+  velocity_15: InputPort<InPlaceControl>,
+  velocity_16: InputPort<InPlaceControl>,
+  gate_1: InputPort<InPlaceControl>,
+  gate_2: InputPort<InPlaceControl>,
+  gate_3: InputPort<InPlaceControl>,
+  gate_4: InputPort<InPlaceControl>,
+  gate_5: InputPort<InPlaceControl>,
+  gate_6: InputPort<InPlaceControl>,
+  gate_7: InputPort<InPlaceControl>,
+  gate_8: InputPort<InPlaceControl>,
+  gate_9: InputPort<InPlaceControl>,
+  gate_10: InputPort<InPlaceControl>,
+  gate_11: InputPort<InPlaceControl>,
+  gate_12: InputPort<InPlaceControl>,
+  gate_13: InputPort<InPlaceControl>,
+  gate_14: InputPort<InPlaceControl>,
+  gate_15: InputPort<InPlaceControl>,
+  gate_16: InputPort<InPlaceControl>,
+  midi_channel: InputPort<InPlaceControl>,
+  current_step: OutputPort<InPlaceControl>,
   control: InputPort<AtomPort>,
   midi_out: OutputPort<AtomPort>,
 }
@@ -165,11 +165,12 @@ impl Plugin for DmSeq {
     }
 
     if !self.is_initialized {
-      let speed = self.map_step_duration_to_divisor(*ports.step_duration) / self.beat_unit as f32;
+      let speed =
+        self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
       self.step_progress_phasor.set_initial_speed(speed);
-      self.set_shuffled_steps(*ports.steps as usize);
+      self.set_shuffled_steps(ports.steps.get() as usize);
       self.is_initialized = true;
-      self.prev_steps = *ports.steps as usize;
+      self.prev_steps = ports.steps.get() as usize;
     }
 
     if self.host_speed == 0. {
@@ -179,19 +180,19 @@ impl Plugin for DmSeq {
 
     if self.get_trigger(ports, sample_count) {
       let next_step = self.current_step + 1;
-      self.current_step = if next_step >= *ports.steps as usize {
+      self.current_step = if next_step >= ports.steps.get() as usize {
         0
       } else {
         next_step
       };
 
-      let reordered_step =
-        self.map_current_step_to_reordered_step(*ports.order as u8, *ports.steps as usize);
+      let reordered_step = self
+        .map_current_step_to_reordered_step(ports.order.get() as u8, ports.steps.get() as usize);
       let current_note = notes[reordered_step];
       let current_velocity = velocities[reordered_step];
       let current_gate = gates[reordered_step];
       let has_note_on = current_velocity > 0 && current_gate;
-      **ports.current_step = reordered_step as f32;
+      ports.current_step.set(reordered_step as f32);
 
       let mut midi_out_sequence = match ports.midi_out.init(
         self.urids.atom.sequence,
@@ -201,14 +202,14 @@ impl Plugin for DmSeq {
         None => return,
       };
 
-      if *ports.enable == 0. {
+      if ports.enable.get() == 0. {
         if let Some(prev_note) = self.prev_note {
           midi_out_sequence
             .init(
               TimeStamp::Frames(0),
               self.urids.midi.wmidi,
               MidiMessage::NoteOff(
-                Channel::from_index(*ports.midi_channel as u8).unwrap(),
+                Channel::from_index(ports.midi_channel.get() as u8).unwrap(),
                 Note::try_from(prev_note).unwrap(),
                 Velocity::try_from(0).unwrap(),
               ),
@@ -220,7 +221,7 @@ impl Plugin for DmSeq {
       }
 
       // skip repeated midi note if in legato mode
-      if *ports.repeat_mode == 0.
+      if ports.repeat_mode.get() == 0.
         && has_note_on
         && self
           .prev_note
@@ -235,7 +236,7 @@ impl Plugin for DmSeq {
             TimeStamp::Frames(0),
             self.urids.midi.wmidi,
             MidiMessage::NoteOff(
-              Channel::from_index(*ports.midi_channel as u8).unwrap(),
+              Channel::from_index(ports.midi_channel.get() as u8).unwrap(),
               Note::try_from(prev_note).unwrap(),
               Velocity::try_from(0).unwrap(),
             ),
@@ -249,7 +250,7 @@ impl Plugin for DmSeq {
             TimeStamp::Frames(0),
             self.urids.midi.wmidi,
             MidiMessage::NoteOn(
-              Channel::from_index(*ports.midi_channel as u8).unwrap(),
+              Channel::from_index(ports.midi_channel.get() as u8).unwrap(),
               Note::try_from(current_note).unwrap(),
               Velocity::try_from(current_velocity).unwrap(),
             ),
