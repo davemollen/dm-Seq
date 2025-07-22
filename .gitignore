@@ -1,6 +1,6 @@
 target
 .DS_Store
 flamegraph.svg
-*libdm_seq.so
-*libdm_seq.dylib
-*libdm_seq.dll
+lv2/**/*.so
+lv2/**/*.dylib
+lv2/**/*.dll
