@@ -3,5 +3,5 @@
 
 <https://github.com/davemollen/dm-Seq>
     a lv2:Plugin ;
-    lv2:binary <libdm_seq.dylib> ;
+    lv2:binary <libdm_seq.so> ;
     rdfs:seeAlso <dm-Seq.ttl> , <modgui.ttl> .
