@@ -173,7 +173,7 @@ impl Plugin for DmSeq {
       self.prev_steps = ports.steps.get() as usize;
     }
 
-    if self.host_speed == 0. {
+    if ports.clock_mode.get() == 1. && self.host_speed == 0. {
       self.handle_transport_stopped(ports);
       return;
     }
