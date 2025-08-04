@@ -1,6 +1,6 @@
 <div class="mod-pedal mod-pedal{{{cns}}}">
   <div mod-role="drag-handle" class="mod-drag-handle"></div>
-  <div class="row">
+  <div class="row flex-1">
     <div class="column justify-center">
       <div class="row knobs">
         <div class="space-before-grid">
@@ -28,8 +28,8 @@
             </div>
           </div>
         </div>
-        <div id="notes" class="column gap">
-          <div class="row gap">
+        <div id="notes" class="column gap-16">
+          <div class="row gap-16">
             <div class="mod-knob">
               <div
                 class="mod-knob-image"
@@ -87,7 +87,7 @@
               ></div>
             </div>
           </div>
-          <div class="row gap">
+          <div class="row gap-16">
             <div class="mod-knob">
               <div
                 class="mod-knob-image"
@@ -146,8 +146,8 @@
             </div>
           </div>
         </div>
-        <div id="velocities" class="column gap hide">
-          <div class="row gap">
+        <div id="velocities" class="column gap-16 hide">
+          <div class="row gap-16">
             <div class="mod-knob">
               <div
                 class="mod-knob-image"
@@ -205,7 +205,7 @@
               ></div>
             </div>
           </div>
-          <div class="row gap">
+          <div class="row gap-16">
             <div class="mod-knob">
               <div
                 class="mod-knob-image"
@@ -279,8 +279,8 @@
           </div>
         </div>
 
-        <div class="column gap">
-          <div class="row gap">
+        <div class="column gap-16">
+          <div class="row gap-16">
             <div
               id="0"
               class="toggle"
@@ -338,7 +338,7 @@
               mod-widget="switch"
             ></div>
           </div>
-          <div class="row gap">
+          <div class="row gap-16">
             <div
               id="8"
               class="toggle"
@@ -400,7 +400,7 @@
       </div>
     </div>
     <div class="column global-controls">
-      <div class="row gap">
+      <div class="row gap-16 flex-1">
         <div class="column">
           <div class="mod-knob">
             <div
@@ -426,122 +426,146 @@
             ></div>
             <div class="mod-param-title">BPM</div>
           </div>
+          <div>
+            <div
+              class="mod-footswitch on panic"
+              mod-role="input-control-port"
+              mod-port-symbol="panic"
+            >
+              <div class="mod-light"></div>
+            </div>
+            <div class="mod-param-title">PANIC</div>
+          </div>
         </div>
         <div class="column justify-between">
-          <div class="mod-enumerated-group-container">
-            {{#controls.3}}
-            <div class="mod-enumerated-group first">
-              <div
-                class="mod-enumerated"
-                mod-role="input-control-port"
-                mod-port-symbol="{{symbol}}"
-                mod-widget="custom-select"
-              >
+          <div class="column gap-8">
+            <div class="mod-enumerated-group-container">
+              {{#controls.3}}
+              <div class="mod-enumerated-group first">
                 <div
-                  mod-role="input-control-value"
+                  class="mod-enumerated"
+                  mod-role="input-control-port"
                   mod-port-symbol="{{symbol}}"
-                  class="mod-enumerated-selected"
-                ></div>
-                <div class="mod-enumerated-list">
-                  {{#scalePoints}}
-                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
-                    {{label}}
+                  mod-widget="custom-select"
+                >
+                  <div
+                    mod-role="input-control-value"
+                    mod-port-symbol="{{symbol}}"
+                    class="mod-enumerated-selected"
+                  ></div>
+                  <div class="mod-enumerated-list">
+                    {{#scalePoints}}
+                    <div
+                      mod-role="enumeration-option"
+                      mod-port-value="{{value}}"
+                    >
+                      {{label}}
+                    </div>
+                    {{/scalePoints}}
                   </div>
-                  {{/scalePoints}}
                 </div>
               </div>
+              <div class="mod-param-title">{{name}}</div>
+              {{/controls.3}}
             </div>
-            <div class="mod-param-title">{{name}}</div>
-            {{/controls.3}}
-          </div>
-          <div class="mod-enumerated-group-container">
-            {{#controls.4}}
-            <div class="mod-enumerated-group second">
-              <div
-                class="mod-enumerated"
-                mod-role="input-control-port"
-                mod-port-symbol="{{symbol}}"
-                mod-widget="custom-select"
-              >
+            <div class="mod-enumerated-group-container">
+              {{#controls.4}}
+              <div class="mod-enumerated-group second">
                 <div
-                  mod-role="input-control-value"
+                  class="mod-enumerated"
+                  mod-role="input-control-port"
                   mod-port-symbol="{{symbol}}"
-                  class="mod-enumerated-selected"
-                ></div>
-                <div class="mod-enumerated-list">
-                  {{#scalePoints}}
-                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
-                    {{label}}
+                  mod-widget="custom-select"
+                >
+                  <div
+                    mod-role="input-control-value"
+                    mod-port-symbol="{{symbol}}"
+                    class="mod-enumerated-selected"
+                  ></div>
+                  <div class="mod-enumerated-list">
+                    {{#scalePoints}}
+                    <div
+                      mod-role="enumeration-option"
+                      mod-port-value="{{value}}"
+                    >
+                      {{label}}
+                    </div>
+                    {{/scalePoints}}
                   </div>
-                  {{/scalePoints}}
                 </div>
               </div>
+              <div class="mod-param-title">{{name}}</div>
+              {{/controls.4}}
             </div>
-            <div class="mod-param-title">{{name}}</div>
-            {{/controls.4}}
-          </div>
-          <div class="mod-enumerated-group-container">
-            {{#controls.5}}
-            <div class="mod-enumerated-group third">
-              <div
-                class="mod-enumerated"
-                mod-role="input-control-port"
-                mod-port-symbol="{{symbol}}"
-                mod-widget="custom-select"
-              >
+            <div class="mod-enumerated-group-container">
+              {{#controls.5}}
+              <div class="mod-enumerated-group third">
                 <div
-                  mod-role="input-control-value"
+                  class="mod-enumerated"
+                  mod-role="input-control-port"
                   mod-port-symbol="{{symbol}}"
-                  class="mod-enumerated-selected"
-                ></div>
-                <div class="mod-enumerated-list">
-                  {{#scalePoints}}
-                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
-                    {{label}}
+                  mod-widget="custom-select"
+                >
+                  <div
+                    mod-role="input-control-value"
+                    mod-port-symbol="{{symbol}}"
+                    class="mod-enumerated-selected"
+                  ></div>
+                  <div class="mod-enumerated-list">
+                    {{#scalePoints}}
+                    <div
+                      mod-role="enumeration-option"
+                      mod-port-value="{{value}}"
+                    >
+                      {{label}}
+                    </div>
+                    {{/scalePoints}}
                   </div>
-                  {{/scalePoints}}
                 </div>
               </div>
+              <div class="mod-param-title">{{name}}</div>
+              {{/controls.5}}
             </div>
-            <div class="mod-param-title">{{name}}</div>
-            {{/controls.5}}
-          </div>
-          <div class="mod-enumerated-group-container">
-            {{#controls.6}}
-            <div class="mod-enumerated-group fourth">
-              <div
-                class="mod-enumerated"
-                mod-role="input-control-port"
-                mod-port-symbol="{{symbol}}"
-                mod-widget="custom-select"
-              >
+            <div class="mod-enumerated-group-container">
+              {{#controls.6}}
+              <div class="mod-enumerated-group fourth">
                 <div
-                  mod-role="input-control-value"
+                  class="mod-enumerated"
+                  mod-role="input-control-port"
                   mod-port-symbol="{{symbol}}"
-                  class="mod-enumerated-selected"
-                ></div>
-                <div class="mod-enumerated-list">
-                  {{#scalePoints}}
-                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
-                    {{label}}
+                  mod-widget="custom-select"
+                >
+                  <div
+                    mod-role="input-control-value"
+                    mod-port-symbol="{{symbol}}"
+                    class="mod-enumerated-selected"
+                  ></div>
+                  <div class="mod-enumerated-list">
+                    {{#scalePoints}}
+                    <div
+                      mod-role="enumeration-option"
+                      mod-port-value="{{value}}"
+                    >
+                      {{label}}
+                    </div>
+                    {{/scalePoints}}
                   </div>
-                  {{/scalePoints}}
                 </div>
               </div>
+              <div class="mod-param-title">{{name}}</div>
+              {{/controls.6}}
             </div>
-            <div class="mod-param-title">{{name}}</div>
-            {{/controls.6}}
           </div>
-        </div>
-      </div>
-      <div class="logo-container">
-        <div class="logo"></div>
-        <div>
-          <div class="mod-footswitch bypass" mod-role="bypass">
-            <div class="mod-light" mod-role="bypass-light"></div>
-          </div>
-          <div class="mod-param-title">
-            <span class="unicode-symbol">&#x23FB;</span>
+          <div class="logo-container">
+            <div class="logo"></div>
+            <div>
+              <div class="mod-footswitch bypass" mod-role="bypass">
+                <div class="mod-light" mod-role="bypass-light"></div>
+              </div>
+              <div class="mod-param-title">
+                <span class="unicode-symbol">&#x23FB;</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

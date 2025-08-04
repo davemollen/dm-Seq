@@ -571,14 +571,23 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		a lv2:InputPort, lv2:ControlPort;
 		lv2:index 58;
 		lv2:symbol "midi_channel";
-		lv2:name "Midi Channel";
+		lv2:name "MIDI Channel";
 		lv2:minimum 0;
 		lv2:default 0;
 		lv2:maximum 15;
 		lv2:portProperty lv2:integer;
 	] , [
-		a lv2:OutputPort, lv2:ControlPort ;
+		a lv2:InputPort, lv2:ControlPort;
 		lv2:index 59;
+		lv2:symbol "panic";
+		lv2:name "MIDI Panic";
+		lv2:portProperty lv2:integer, lv2:toggled, pprops:trigger;
+		lv2:default 0;
+		lv2:minimum 0;
+		lv2:maximum 1;	
+	] , [
+		a lv2:OutputPort, lv2:ControlPort ;
+		lv2:index 60;
 		lv2:symbol "current_step";
 		lv2:name "Current Step";
 		lv2:minimum -1;
@@ -589,14 +598,14 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		a atom:AtomPort, lv2:InputPort;
 		atom:bufferType atom:Sequence;
 		atom:supports time:Position;
-		lv2:index 60;
+		lv2:index 61;
 		lv2:symbol "control";
 		lv2:name "Control";
 	] , [
 		a atom:AtomPort, lv2:OutputPort;
 		atom:bufferType atom:Sequence;
 		atom:supports midi:MidiEvent ;
-		lv2:index 61;
+		lv2:index 62;
 		lv2:symbol "midi_out";
 		lv2:name "MIDI Out";
 	] .

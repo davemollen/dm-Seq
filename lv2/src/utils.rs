@@ -1,6 +1,10 @@
 use {
   crate::{DmSeq, Ports},
-  lv2::lv2_atom::object::ObjectReader,
+  lv2::{
+    lv2_atom::{object::ObjectReader, sequence::SequenceWriter},
+    prelude::TimeStamp,
+  },
+  wmidi::{Channel, ControlNumber, ControlValue, MidiMessage},
 };
 
 pub struct SequencerData {
@@ -11,47 +15,6 @@ pub struct SequencerData {
 
 impl DmSeq {
   pub fn map_sequencer_data(&self, ports: &mut Ports) -> SequencerData {
-    // TODO: check for CPU
-    // let notes: [u8; 16] = unsafe {
-    //   mem::transmute_copy(&[
-    //     ports.note_1.get(),
-    //     ports.note_2.get(),
-    //     ports.note_3.get(),
-    //     ports.note_4.get(),
-    //     ports.note_5.get(),
-    //     ports.note_6.get(),
-    //     ports.note_7.get(),
-    //     ports.note_8.get(),
-    //     ports.note_9.get(),
-    //     ports.note_10.get(),
-    //     ports.note_11.get(),
-    //     ports.note_12.get(),
-    //     ports.note_13.get(),
-    //     ports.note_14.get(),
-    //     ports.note_15.get(),
-    //     ports.note_16.get(),
-    //   ])
-    // };
-    // let velocities: [u8; 16] = unsafe {
-    //   mem::transmute_copy(&[
-    //     ports.velocity_1.get(),
-    //     ports.velocity_2.get(),
-    //     ports.velocity_3.get(),
-    //     ports.velocity_4.get(),
-    //     ports.velocity_5.get(),
-    //     ports.velocity_6.get(),
-    //     ports.velocity_7.get(),
-    //     ports.velocity_8.get(),
-    //     ports.velocity_9.get(),
-    //     ports.velocity_10.get(),
-    //     ports.velocity_11.get(),
-    //     ports.velocity_12.get(),
-    //     ports.velocity_13.get(),
-    //     ports.velocity_14.get(),
-    //     ports.velocity_15.get(),
-    //     ports.velocity_16.get(),
-    //   ])
-    // };
     let notes = [
       ports.note_1.get(),
       ports.note_2.get(),
@@ -237,6 +200,41 @@ impl DmSeq {
         trigger
       }
       _ => false,
+    }
+  }
+
+  pub fn midi_panic(&self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
+    for channel in 0..16 {
+      // set sustain to zero
+      midi_out_sequence.init(
+        TimeStamp::Frames(0),
+        self.urids.midi.wmidi,
+        MidiMessage::ControlChange(
+          Channel::from_index(channel).unwrap(),
+          ControlNumber::try_from(64).unwrap(),
+          ControlValue::try_from(0).unwrap(),
+        ),
+      );
+      // send notes off message
+      midi_out_sequence.init(
+        TimeStamp::Frames(0),
+        self.urids.midi.wmidi,
+        MidiMessage::ControlChange(
+          Channel::from_index(channel).unwrap(),
+          ControlNumber::try_from(123).unwrap(),
+          ControlValue::try_from(0).unwrap(),
+        ),
+      );
+      // send sound off message
+      midi_out_sequence.init(
+        TimeStamp::Frames(0),
+        self.urids.midi.wmidi,
+        MidiMessage::ControlChange(
+          Channel::from_index(channel).unwrap(),
+          ControlNumber::try_from(120).unwrap(),
+          ControlValue::try_from(0).unwrap(),
+        ),
+      );
     }
   }
 }

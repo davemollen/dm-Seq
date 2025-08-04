@@ -25,6 +25,14 @@ function(event) {
           trigger.removeClass("on");
         }
         break;
+      case "panic":
+        const panic = event.icon.find("[mod-port-symbol=panic]");
+        if(value == 1) {
+          panic.addClass("on");
+        } else {
+          panic.removeClass("on");
+        }
+        break;
       default:
         break;
     }

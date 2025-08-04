@@ -239,6 +239,10 @@
         ] , [
             lv2:index 56;
             lv2:symbol "midi_channel";
-            lv2:name "Midi Channel";
+            lv2:name "MIDI Channel";
+        ] , [
+            lv2:index 57;
+            lv2:symbol "panic";
+            lv2:name "MIDI Panic";
         ]
     ] .

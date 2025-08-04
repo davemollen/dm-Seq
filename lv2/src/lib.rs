@@ -70,14 +70,10 @@ struct Ports {
   gate_15: InputPort<InPlaceControl>,
   gate_16: InputPort<InPlaceControl>,
   midi_channel: InputPort<InPlaceControl>,
+  panic: InputPort<InPlaceControl>,
   current_step: OutputPort<InPlaceControl>,
   control: InputPort<AtomPort>,
   midi_out: OutputPort<AtomPort>,
-}
-
-#[derive(FeatureCollection)]
-pub struct AudioFeatures<'a> {
-  log: Log<'a>,
 }
 
 #[derive(FeatureCollection)]
@@ -91,7 +87,6 @@ pub struct URIDs {
   midi: MidiURIDCollection,
   unit: UnitURIDCollection,
   time: TimeURIDCollection,
-  log: LogURIDCollection,
 }
 
 #[uri("https://github.com/davemollen/dm-Seq")]
@@ -115,7 +110,7 @@ struct DmSeq {
 impl Plugin for DmSeq {
   type Ports = Ports;
   type InitFeatures = InitFeatures<'static>;
-  type AudioFeatures = AudioFeatures<'static>;
+  type AudioFeatures = ();
 
   fn new(plugin_info: &PluginInfo, features: &mut Self::InitFeatures) -> Option<Self> {
     let sample_rate = plugin_info.sample_rate() as f32;
@@ -139,16 +134,34 @@ impl Plugin for DmSeq {
   }
 
   fn run(&mut self, ports: &mut Ports, _features: &mut Self::AudioFeatures, sample_count: u32) {
+    if !self.is_initialized {
+      let speed =
+        self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
+      self.step_progress_phasor.set_initial_speed(speed);
+      self.set_shuffled_steps(ports.steps.get() as usize);
+      self.is_initialized = true;
+      self.prev_steps = ports.steps.get() as usize;
+    }
+
     let SequencerData {
       notes,
       velocities,
       gates,
     } = self.map_sequencer_data(ports);
+    let trigger = self.get_trigger(ports, sample_count);
 
     let control_sequence = match ports
       .control
       .read(self.urids.atom.sequence, self.urids.unit.beat)
     {
+      Some(sequence_iter) => sequence_iter,
+      None => return,
+    };
+
+    let mut midi_out_sequence = match ports.midi_out.init(
+      self.urids.atom.sequence,
+      TimeStampURID::Frames(self.urids.unit.frame),
+    ) {
       Some(sequence_iter) => sequence_iter,
       None => return,
     };
@@ -164,21 +177,16 @@ impl Plugin for DmSeq {
       }
     }
 
-    if !self.is_initialized {
-      let speed =
-        self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
-      self.step_progress_phasor.set_initial_speed(speed);
-      self.set_shuffled_steps(ports.steps.get() as usize);
-      self.is_initialized = true;
-      self.prev_steps = ports.steps.get() as usize;
-    }
-
     if ports.clock_mode.get() == 1. && self.host_speed == 0. {
       self.handle_transport_stopped(ports);
       return;
     }
 
-    if self.get_trigger(ports, sample_count) {
+    if ports.panic.get() == 1. {
+      self.midi_panic(&mut midi_out_sequence);
+    }
+
+    if trigger {
       let next_step = self.current_step + 1;
       self.current_step = if next_step >= ports.steps.get() as usize {
         0
@@ -193,14 +201,6 @@ impl Plugin for DmSeq {
       let current_gate = gates[reordered_step];
       let has_note_on = current_velocity > 0 && current_gate;
       ports.current_step.set(reordered_step as f32);
-
-      let mut midi_out_sequence = match ports.midi_out.init(
-        self.urids.atom.sequence,
-        TimeStampURID::Frames(self.urids.unit.frame),
-      ) {
-        Some(sequence_iter) => sequence_iter,
-        None => return,
-      };
 
       if ports.enable.get() == 0. {
         if let Some(prev_note) = self.prev_note {
