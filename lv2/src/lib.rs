@@ -1,10 +1,11 @@
 mod event_queue;
 mod utils;
 use {
-  crate::{event_queue::EventQueue, utils::SequencerData},
+  crate::{
+    event_queue::EventQueue,
+    utils::{NextStep, SequencerData},
+  },
   lv2::prelude::*,
-  std::ffi::CStr,
-  wmidi::{Channel, Note, Velocity},
 };
 
 #[derive(PortCollection)]
@@ -79,18 +80,12 @@ pub struct InitFeatures<'a> {
   map: LV2Map<'a>,
 }
 
-#[derive(FeatureCollection)]
-pub struct AudioFeatures<'a> {
-  log: Log<'a>,
-}
-
 #[derive(URIDCollection)]
 pub struct URIDs {
   atom: AtomURIDCollection,
   midi: MidiURIDCollection,
   unit: UnitURIDCollection,
   time: TimeURIDCollection,
-  log: LogURIDCollection,
 }
 
 #[uri("https://github.com/davemollen/dm-Seq")]
@@ -116,7 +111,7 @@ struct DmSeq {
 impl Plugin for DmSeq {
   type Ports = Ports;
   type InitFeatures = InitFeatures<'static>;
-  type AudioFeatures = AudioFeatures<'static>;
+  type AudioFeatures = ();
 
   fn new(plugin_info: &PluginInfo, features: &mut Self::InitFeatures) -> Option<Self> {
     let sample_rate = plugin_info.sample_rate() as f32;
@@ -141,7 +136,7 @@ impl Plugin for DmSeq {
     })
   }
 
-  fn run(&mut self, ports: &mut Ports, features: &mut Self::AudioFeatures, sample_count: u32) {
+  fn run(&mut self, ports: &mut Ports, _features: &mut Self::AudioFeatures, sample_count: u32) {
     if !self.is_initialized {
       self.set_shuffled_steps(ports.steps.get() as usize);
       self.is_initialized = true;
@@ -189,61 +184,36 @@ impl Plugin for DmSeq {
       match ports.clock_mode.get() {
         1. => {
           while self.next_step_frame < self.block_start_frame + sample_count as i64 {
-            let next_step = self.current_step + 1;
-            self.current_step = if next_step >= ports.steps.get() as usize {
-              0
-            } else {
-              next_step
-            };
+            let NextStep {
+              note,
+              velocity,
+              channel,
+              is_note_on,
+            } = self.resolve_next_step(ports, notes, velocities, gates);
 
-            let reordered_step = self.map_current_step_to_reordered_step(
-              ports.order.get() as u8,
-              ports.steps.get() as usize,
-            );
-            let current_note = notes[reordered_step];
-            let current_velocity = velocities[reordered_step];
-            let current_gate = gates[reordered_step];
-            let has_note_on = current_velocity > 0 && current_gate;
-            ports.current_step.set(reordered_step as f32);
-
-            let samples_per_beat = self.sample_rate * 60.0 / self.host_bpm;
             let division =
               self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
+            let step_duration_in_samples =
+              self.get_step_duration_in_samples(self.host_bpm, division);
+            let start_in_samples =
+              self.get_swing_offset_in_samples(ports, step_duration_in_samples);
 
             let phase = (self.beat * division).fract();
-            features
-              .log
-              .print_cstr(
-                self.urids.log.note,
-                CStr::from_bytes_with_nul(format!("beat phase: {}\n\0", phase).as_bytes()).unwrap(),
-              )
-              .ok();
             let offset_phase = if phase > 0.5 { 1. - phase } else { -phase };
-            let step_in_samples = samples_per_beat * division.recip();
-            let step_offset_in_samples = offset_phase * step_in_samples;
+            let step_offset_in_samples = offset_phase * step_duration_in_samples;
             self.next_step_frame =
-              (self.block_start_frame as f32 + step_in_samples + step_offset_in_samples).round()
-                as i64;
-            let step_is_an_even_number = self.current_step & 1 == 0;
-            let swing_offset_in_samples = if step_is_an_even_number {
-              0
-            } else {
-              (ports.swing.get() * 0.5 * step_in_samples as f32).round() as i64
-            };
+              (self.block_start_frame as f32 + step_duration_in_samples + step_offset_in_samples)
+                .round() as i64;
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
-            } else if has_note_on {
-              let note = Note::try_from(current_note).unwrap();
-              let channel = Channel::from_index(ports.midi_channel.get() as u8).unwrap();
-              let velocity = Velocity::try_from(current_velocity).unwrap();
-
+            } else if is_note_on {
               self.event_queue.schedule_note(
                 channel,
                 note,
                 velocity,
-                swing_offset_in_samples,
-                step_in_samples.round() as i64,
+                start_in_samples,
+                step_duration_in_samples.round() as i64,
                 ports.repeat_mode.get() == 0.,
               );
             }
@@ -253,48 +223,32 @@ impl Plugin for DmSeq {
           while self.free_running_next_step_frame
             < self.free_running_block_start_frame + sample_count as i64
           {
-            let next_step = self.current_step + 1;
-            self.current_step = if next_step >= ports.steps.get() as usize {
-              0
-            } else {
-              next_step
-            };
+            let NextStep {
+              note,
+              velocity,
+              channel,
+              is_note_on,
+            } = self.resolve_next_step(ports, notes, velocities, gates);
 
-            let reordered_step = self.map_current_step_to_reordered_step(
-              ports.order.get() as u8,
-              ports.steps.get() as usize,
-            );
-            let current_note = notes[reordered_step];
-            let current_velocity = velocities[reordered_step];
-            let current_gate = gates[reordered_step];
-            let has_note_on = current_velocity > 0 && current_gate;
-            ports.current_step.set(reordered_step as f32);
-
-            let samples_per_beat = self.sample_rate * 60.0 / ports.bpm.get();
             let division = self.map_step_duration_to_divisor(ports.step_duration.get()) / 4.;
-            let step_in_samples = (samples_per_beat * division.recip()).round() as i64;
+            let step_duration_in_samples =
+              self.get_step_duration_in_samples(ports.bpm.get(), division);
+            let start_in_samples =
+              self.get_swing_offset_in_samples(ports, step_duration_in_samples);
+
+            let step_duration_in_samples_rounded = step_duration_in_samples.round() as i64;
             self.free_running_next_step_frame =
-              self.free_running_block_start_frame + step_in_samples;
-            let step_is_an_even_number = self.current_step & 1 == 0;
-            let swing_offset_in_samples = if step_is_an_even_number {
-              0
-            } else {
-              (ports.swing.get() * 0.5 * step_in_samples as f32).round() as i64
-            };
+              self.free_running_block_start_frame + step_duration_in_samples_rounded;
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
-            } else if has_note_on {
-              let note = Note::try_from(current_note).unwrap();
-              let channel = Channel::from_index(ports.midi_channel.get() as u8).unwrap();
-              let velocity = Velocity::try_from(current_velocity).unwrap();
-
+            } else if is_note_on {
               self.event_queue.schedule_note(
                 channel,
                 note,
                 velocity,
-                swing_offset_in_samples,
-                step_in_samples,
+                start_in_samples,
+                step_duration_in_samples_rounded,
                 ports.repeat_mode.get() == 0.,
               );
             }
@@ -303,35 +257,21 @@ impl Plugin for DmSeq {
         }
         _ => {
           if ports.trigger.get() == 1. {
-            let next_step = self.current_step + 1;
-            self.current_step = if next_step >= ports.steps.get() as usize {
-              0
-            } else {
-              next_step
-            };
-
-            let reordered_step = self.map_current_step_to_reordered_step(
-              ports.order.get() as u8,
-              ports.steps.get() as usize,
-            );
-            let current_note = notes[reordered_step];
-            let current_velocity = velocities[reordered_step];
-            let current_gate = gates[reordered_step];
-            let has_note_on = current_velocity > 0 && current_gate;
-            ports.current_step.set(reordered_step as f32);
+            let NextStep {
+              note,
+              velocity,
+              channel,
+              is_note_on,
+            } = self.resolve_next_step(ports, notes, velocities, gates);
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
             }
-            let note = Note::try_from(current_note).unwrap();
-            let channel = Channel::from_index(ports.midi_channel.get() as u8).unwrap();
-            let velocity = Velocity::try_from(current_velocity).unwrap();
-
             self.event_queue.schedule_triggered_note(
               channel,
               note,
               velocity,
-              has_note_on,
+              is_note_on,
               ports.repeat_mode.get() == 0.,
             );
           }

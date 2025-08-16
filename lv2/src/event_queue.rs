@@ -22,13 +22,17 @@ impl EventQueue {
 
   pub fn schedule_note(
     &mut self,
-    channel: Channel,
-    note: Note,
-    velocity: Velocity,
+    channel: u8,
+    note: u8,
+    velocity: u8,
     start_in_samples: i64,
     length_in_samples: i64,
     legato_mode: bool,
   ) {
+    let channel = Channel::from_index(channel).unwrap();
+    let note = Note::try_from(note).unwrap();
+    let velocity = Velocity::try_from(velocity).unwrap();
+
     if legato_mode {
       // Try to extend an existing NoteOff for this note in legato mode
       if self.extend_note_off(channel, note, length_in_samples) {
@@ -78,12 +82,16 @@ impl EventQueue {
 
   pub fn schedule_triggered_note(
     &mut self,
-    channel: Channel,
-    note: Note,
-    velocity: Velocity,
+    channel: u8,
+    note: u8,
+    velocity: u8,
     has_note_on: bool,
     legato_mode: bool,
   ) {
+    let note = Note::try_from(note).unwrap();
+    let channel = Channel::from_index(channel).unwrap();
+    let velocity = Velocity::try_from(velocity).unwrap();
+
     if !has_note_on {
       // Send stored NoteOff
       if let Some(midi_message) = &self.next_note_off {

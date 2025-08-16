@@ -13,6 +13,13 @@ pub struct SequencerData {
   pub gates: [bool; 16],
 }
 
+pub struct NextStep {
+  pub note: u8,
+  pub velocity: u8,
+  pub channel: u8,
+  pub is_note_on: bool,
+}
+
 impl DmSeq {
   pub fn map_sequencer_data(&self, ports: &mut Ports) -> SequencerData {
     let notes = [
@@ -79,6 +86,36 @@ impl DmSeq {
     };
   }
 
+  pub fn resolve_next_step(
+    &mut self,
+    ports: &mut Ports,
+    notes: [u8; 16],
+    velocities: [u8; 16],
+    gates: [bool; 16],
+  ) -> NextStep {
+    let next_step = self.current_step + 1;
+    self.current_step = if next_step >= ports.steps.get() as usize {
+      0
+    } else {
+      next_step
+    };
+
+    let reordered_step =
+      self.map_current_step_to_reordered_step(ports.order.get() as u8, ports.steps.get() as usize);
+    let note = notes[reordered_step];
+    let velocity = velocities[reordered_step];
+    let gate = gates[reordered_step];
+    let is_note_on = velocity > 0 && gate;
+    ports.current_step.set(reordered_step as f32);
+
+    NextStep {
+      note,
+      velocity,
+      channel: ports.midi_channel.get() as u8,
+      is_note_on,
+    }
+  }
+
   pub fn map_step_duration_to_divisor(&self, step_duration: f32) -> f32 {
     /*
     lv2:scalePoint [ rdfs:label "64th";      	rdf:value 0 ; ] ;
@@ -101,27 +138,22 @@ impl DmSeq {
     }
   }
 
-  pub fn map_current_step_to_reordered_step(&mut self, order: u8, steps: usize) -> usize {
-    let reordered_step = match order {
-      1 => {
-        // reverse
-        steps - self.current_step - 1
-      }
-      2 => {
-        // shuffle
-        if self.current_step == 0 || steps != self.prev_steps {
-          self.set_shuffled_steps(steps);
-        }
-        self.shuffled_steps[self.current_step]
-      }
-      3 => {
-        // random
-        fastrand::usize(0..steps)
-      }
-      _ => self.current_step,
-    };
-    self.prev_steps = steps;
-    return reordered_step;
+  pub fn get_step_duration_in_samples(&self, bpm: f32, division: f32) -> f32 {
+    let samples_per_beat = self.sample_rate * 60.0 / bpm;
+    samples_per_beat * division.recip()
+  }
+
+  pub fn get_swing_offset_in_samples(
+    &self,
+    ports: &mut Ports,
+    step_duration_in_samples: f32,
+  ) -> i64 {
+    let step_is_an_even_number = self.current_step & 1 == 0;
+    if step_is_an_even_number {
+      0
+    } else {
+      (ports.swing.get() * 0.5 * step_duration_in_samples).round() as i64
+    }
   }
 
   pub fn set_shuffled_steps(&mut self, steps: usize) {
@@ -199,5 +231,28 @@ impl DmSeq {
         ),
       );
     }
+  }
+
+  fn map_current_step_to_reordered_step(&mut self, order: u8, steps: usize) -> usize {
+    let reordered_step = match order {
+      1 => {
+        // reverse
+        steps - self.current_step - 1
+      }
+      2 => {
+        // shuffle
+        if self.current_step == 0 || steps != self.prev_steps {
+          self.set_shuffled_steps(steps);
+        }
+        self.shuffled_steps[self.current_step]
+      }
+      3 => {
+        // random
+        fastrand::usize(0..steps)
+      }
+      _ => self.current_step,
+    };
+    self.prev_steps = steps;
+    return reordered_step;
   }
 }
