@@ -141,15 +141,8 @@ impl DmSeq {
       gates,
     } = *sequencer_data;
 
-    let next_step = self.current_step + 1;
-    self.current_step = if next_step >= ports.steps.get() as usize {
-      0
-    } else {
-      next_step
-    };
-
-    let reordered_step =
-      self.map_current_step_to_reordered_step(ports.order.get() as u8, ports.steps.get() as usize);
+    self.advance_step(ports);
+    let reordered_step = self.map_current_step_to_reordered_step(ports);
     let note = notes[reordered_step];
     let velocity = velocities[reordered_step];
     let note_length = note_lengths[reordered_step];
@@ -216,7 +209,11 @@ impl DmSeq {
       .for_each(|(i, val)| {
         *val = i;
       });
-    fastrand::shuffle(&mut self.shuffled_steps);
+
+    while self.last_shuffled_step == self.shuffled_steps[steps - 1] {
+      fastrand::shuffle(&mut self.shuffled_steps);
+    }
+    self.last_shuffled_step = self.shuffled_steps[steps - 1]
   }
 
   pub fn update_position(&mut self, object_reader: ObjectReader<'static>) {
@@ -247,6 +244,7 @@ impl DmSeq {
     self.is_in_swing_cycle = true;
     self.next_step_frame = 0;
     self.event_queue.stop_all_notes();
+    self.should_alternate_sequence = false;
   }
 
   pub fn midi_panic(&self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
@@ -284,26 +282,101 @@ impl DmSeq {
     }
   }
 
-  fn map_current_step_to_reordered_step(&mut self, order: u8, steps: usize) -> usize {
+  fn map_current_step_to_reordered_step(&mut self, ports: &mut Ports) -> usize {
+    let order = ports.order.get() as u8;
+    let steps = ports.steps.get() as usize;
+
     let reordered_step = match order {
       1 => {
-        // reverse
+        // Reverse A
         steps - self.current_step - 1
       }
       2 => {
-        // shuffle
+        // Reverse B
+        if self.current_step == 0 {
+          0
+        } else {
+          steps - self.current_step
+        }
+      }
+      3 => {
+        // Alternate
+        if self.current_step == 0 {
+          self.should_alternate_sequence = !self.should_alternate_sequence;
+        }
+
+        if self.should_alternate_sequence {
+          steps - self.current_step - 1
+        } else {
+          self.current_step
+        }
+      }
+      4 => {
+        // Pendulum
+        if self.should_alternate_sequence {
+          if self.current_step == 0 {
+            self.should_alternate_sequence = !self.should_alternate_sequence;
+            self.advance_step(ports);
+            return self.current_step;
+          }
+          steps - self.current_step - 1
+        } else {
+          if self.current_step >= steps - 1 {
+            self.should_alternate_sequence = !self.should_alternate_sequence;
+            self.advance_step(ports);
+            return steps - self.current_step - 1;
+          }
+          self.current_step
+        }
+      }
+      5 => {
+        // Either Way
+        if self.current_step == 0 {
+          self.should_alternate_sequence = fastrand::bool();
+        }
+
+        if self.should_alternate_sequence {
+          steps - self.current_step - 1
+        } else {
+          self.current_step
+        }
+      }
+      6 => {
+        // Shuffle
         if self.current_step == 0 || steps != self.prev_steps {
           self.set_shuffled_steps(steps);
         }
         self.shuffled_steps[self.current_step]
       }
-      3 => {
-        // random
+      7 => {
+        // Random
         fastrand::usize(0..steps)
+      }
+      8 => {
+        // Brownian
+        let random = fastrand::f32();
+        if random < 0.25 {
+          // undo advance step and move to the step before
+          self.current_step = self.current_step + steps - 2 % steps;
+        } else if random < 0.5 {
+          // undo advance step
+          self.current_step = self.current_step + steps - 1 % steps;
+        };
+        // otherwise we advance to the next step
+        self.current_step
       }
       _ => self.current_step,
     };
     self.prev_steps = steps;
     return reordered_step;
+  }
+
+  fn advance_step(&mut self, ports: &mut Ports) {
+    let next_step = self.current_step + 1;
+    self.current_step = if next_step >= ports.steps.get() as usize {
+      0
+    } else {
+      next_step
+    };
   }
 }
