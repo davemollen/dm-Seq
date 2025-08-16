@@ -143,13 +143,15 @@ impl DmSeq {
 
     self.advance_step(ports);
     let reordered_step = self.map_current_step_to_reordered_step(ports);
-    let note = notes[reordered_step];
-    let velocity = velocities[reordered_step];
-    let note_length = note_lengths[reordered_step];
-    let channel = channels[reordered_step];
-    let gate = gates[reordered_step];
+    let repositioned_step =
+      (reordered_step + ports.step_offset.get() as usize) % ports.steps.get() as usize;
+    let note = notes[repositioned_step];
+    let velocity = velocities[repositioned_step];
+    let note_length = note_lengths[repositioned_step];
+    let channel = channels[repositioned_step];
+    let gate = gates[repositioned_step];
     let is_note_on = velocity > 0 && gate;
-    ports.current_step.set(reordered_step as f32);
+    ports.current_step.set(repositioned_step as f32);
 
     NextStep {
       note,
@@ -288,18 +290,10 @@ impl DmSeq {
 
     let reordered_step = match order {
       1 => {
-        // Reverse A
+        // Reverse
         steps - self.current_step - 1
       }
       2 => {
-        // Reverse B
-        if self.current_step == 0 {
-          0
-        } else {
-          steps - self.current_step
-        }
-      }
-      3 => {
         // Alternate
         if self.current_step == 0 {
           self.should_alternate_sequence = !self.should_alternate_sequence;
@@ -311,7 +305,7 @@ impl DmSeq {
           self.current_step
         }
       }
-      4 => {
+      3 => {
         // Pendulum
         if self.should_alternate_sequence {
           if self.current_step == 0 {
@@ -329,7 +323,31 @@ impl DmSeq {
           self.current_step
         }
       }
+      4 => {
+        // Random
+        fastrand::usize(0..steps)
+      }
       5 => {
+        // Shuffle
+        if self.current_step == 0 || steps != self.prev_steps {
+          self.set_shuffled_steps(steps);
+        }
+        self.shuffled_steps[self.current_step]
+      }
+      6 => {
+        // Brownian
+        let random = fastrand::f32();
+        if random < 0.25 {
+          // go back to previous step
+          self.current_step = (self.current_step + steps - 2) % steps;
+        } else if random < 0.5 {
+          // stay on current step
+          self.current_step = (self.current_step + steps - 1) % steps;
+        };
+        // advance to the next step
+        self.current_step
+      }
+      7 => {
         // Either Way
         if self.current_step == 0 {
           self.should_alternate_sequence = fastrand::bool();
@@ -340,30 +358,6 @@ impl DmSeq {
         } else {
           self.current_step
         }
-      }
-      6 => {
-        // Shuffle
-        if self.current_step == 0 || steps != self.prev_steps {
-          self.set_shuffled_steps(steps);
-        }
-        self.shuffled_steps[self.current_step]
-      }
-      7 => {
-        // Random
-        fastrand::usize(0..steps)
-      }
-      8 => {
-        // Brownian
-        let random = fastrand::f32();
-        if random < 0.25 {
-          // undo advance step and move to the step before
-          self.current_step = self.current_step + steps - 2 % steps;
-        } else if random < 0.5 {
-          // undo advance step
-          self.current_step = self.current_step + steps - 1 % steps;
-        };
-        // otherwise we advance to the next step
-        self.current_step
       }
       _ => self.current_step,
     };

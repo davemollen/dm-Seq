@@ -11,6 +11,7 @@ struct Ports {
   enable: InputPort<InPlaceControl>,
   trigger: InputPort<InPlaceControl>,
   steps: InputPort<InPlaceControl>,
+  step_offset: InputPort<InPlaceControl>,
   swing: InputPort<InPlaceControl>,
   step_duration: InputPort<InPlaceControl>,
   clock_mode: InputPort<InPlaceControl>,
@@ -212,6 +213,7 @@ impl Plugin for DmSeq {
     } else {
       match ports.clock_mode.get() {
         1. => {
+          // clock_mode == Host Sync
           while self.next_step_frame < self.block_start_frame + sample_count as i64 {
             let NextStep {
               note,
@@ -250,6 +252,7 @@ impl Plugin for DmSeq {
           }
         }
         2. => {
+          // clock_mode == Free Running
           while self.free_running_next_step_frame
             < self.free_running_block_start_frame + sample_count as i64
           {
@@ -286,6 +289,7 @@ impl Plugin for DmSeq {
           self.free_running_block_start_frame += sample_count as i64;
         }
         _ => {
+          // clock_mode == Trigger
           if ports.trigger.get() == 1. {
             let NextStep {
               note,
