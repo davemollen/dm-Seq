@@ -138,69 +138,32 @@ impl DmSeq {
 
   pub fn update_position(&mut self, object_reader: ObjectReader<'static>) {
     for (property_header, property) in object_reader {
-      if property_header.key == self.urids.time.beat_unit {
-        self.beat_unit = property.read(self.urids.atom.int, ()).unwrap_or(4);
+      if property_header.key == self.urids.time.beats_per_minute {
+        self.host_bpm = property.read(self.urids.atom.float, ()).unwrap_or(120.);
       }
       if property_header.key == self.urids.time.speed {
         self.host_speed = property.read(self.urids.atom.float, ()).unwrap_or(0.);
+      }
+      if property_header.key == self.urids.time.beat_unit {
+        self.beat_unit = property.read(self.urids.atom.int, ()).unwrap_or(4);
       }
       if property_header.key == self.urids.time.bar_beat {
         self.beat = property
           .read(self.urids.atom.float, ())
           .map_or(0., |beat| beat.fract());
       }
+      if property_header.key == self.urids.time.frame {
+        self.block_start_frame = property.read(self.urids.atom.long, ()).unwrap_or(0);
+      }
     }
-  }
-
-  pub fn map_step_progress_to_trigger(&mut self, step_progress: f32, swing: f32) -> bool {
-    let non_swing_trigger = self.step_progress_delta.process(step_progress) < 0.;
-    if non_swing_trigger {
-      self.is_in_swing_cycle = !self.is_in_swing_cycle;
-    };
-    let trigger = if self.is_in_swing_cycle && swing != 0. {
-      self.swing_delta.process(if step_progress > (swing * 0.5) {
-        1.
-      } else {
-        0.
-      }) > 0.
-    } else {
-      non_swing_trigger
-    };
-
-    trigger
   }
 
   pub fn handle_transport_stopped(&mut self, ports: &mut Ports) {
     self.current_step = 15;
     ports.current_step.set(-1.);
-    self.prev_note = None;
     self.is_in_swing_cycle = true;
-  }
-
-  pub fn get_trigger(&mut self, ports: &mut Ports, sample_count: u32) -> bool {
-    match ports.clock_mode.get() {
-      0. => {
-        // Trigger
-        ports.trigger.get() == 1.
-      }
-      1. => {
-        // Host Sync
-        let speed =
-          self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
-        let step_progress = self.step_progress_phasor.process(self.beat, speed);
-        let trigger = self.map_step_progress_to_trigger(step_progress, ports.swing.get());
-        trigger
-      }
-      2. => {
-        // Free Running
-        let speed_factor = self.map_step_duration_to_divisor(ports.step_duration.get()) / 4.;
-        let freq = ports.bpm.get() / 60. * speed_factor;
-        let step_progress = self.phasor.process(freq, sample_count);
-        let trigger = self.map_step_progress_to_trigger(step_progress, ports.swing.get());
-        trigger
-      }
-      _ => false,
-    }
+    self.next_step_frame = 0;
+    self.event_queue.stop_all_notes();
   }
 
   pub fn midi_panic(&self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
