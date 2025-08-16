@@ -4,13 +4,16 @@ function(event) {
       case "knob_target":
         const notes = event.icon.find("#notes");
         const velocities = event.icon.find("#velocities");
-        if(value == 1) {
-          notes.addClass("hide")
-          velocities.removeClass("hide")
-        } else {
-          notes.removeClass("hide")
-          velocities.addClass("hide")
-        }
+        const note_lengths = event.icon.find("#note-lengths");
+        const channels = event.icon.find("#channels");
+
+        [notes, velocities, note_lengths, channels].forEach(function(element, index) {
+          if(index == value) {
+            element.removeClass("hide");
+          } else {
+            element.addClass("hide");
+          }
+        })
         break;
       case 'current_step':
         const current_step = Math.round(value)

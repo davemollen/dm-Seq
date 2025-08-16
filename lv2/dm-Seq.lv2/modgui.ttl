@@ -174,74 +174,198 @@
             lv2:name "Velocity 16";
         ] , [
             lv2:index 40;
+            lv2:symbol "note_length_1";
+            lv2:name "Length 1";            
+        ] , [
+            lv2:index 41;
+            lv2:symbol "note_length_2";
+            lv2:name "Length 2";            
+        ] , [
+            lv2:index 42;
+            lv2:symbol "note_length_3";
+            lv2:name "Length 3";            
+        ] , [
+            lv2:index 43;
+            lv2:symbol "note_length_4";
+            lv2:name "Length 4";            
+        ] , [
+            lv2:index 44;
+            lv2:symbol "note_length_5";
+            lv2:name "Length 5";            
+        ] , [
+            lv2:index 45;
+            lv2:symbol "note_length_6";
+            lv2:name "Length 6";            
+        ] , [
+            lv2:index 46;
+            lv2:symbol "note_length_7";
+            lv2:name "Length 7";
+        ] , [
+            lv2:index 47;
+            lv2:symbol "note_length_8";
+            lv2:name "Length 8";
+        ] , [
+            lv2:index 48;
+            lv2:symbol "note_length_9";
+            lv2:name "Length 9";
+        ] , [
+            lv2:index 49;
+            lv2:symbol "note_length_10";
+            lv2:name "Length 10";
+        ] , [
+            lv2:index 50;
+            lv2:symbol "note_length_11";
+            lv2:name "Length 11";
+        ] , [
+            lv2:index 51;
+            lv2:symbol "note_length_12";
+            lv2:name "Length 12";
+        ] , [
+            lv2:index 52;
+            lv2:symbol "note_length_13";
+            lv2:name "Length 13";
+        ] , [
+            lv2:index 53;
+            lv2:symbol "note_length_14";
+            lv2:name "Length 14";
+        ] , [
+            lv2:index 54;
+            lv2:symbol "note_length_15";
+            lv2:name "Length 15";
+        ] , [
+            lv2:index 55;
+            lv2:symbol "note_length_16";
+            lv2:name "Length 16";
+        ] , [
+            lv2:index 56;
+            lv2:symbol "channel_1";
+            lv2:name "Channel 1";            
+        ] , [
+            lv2:index 57;
+            lv2:symbol "channel_2";
+            lv2:name "Channel 2";            
+        ] , [
+            lv2:index 58;
+            lv2:symbol "channel_3";
+            lv2:name "Channel 3";            
+        ] , [
+            lv2:index 59;
+            lv2:symbol "channel_4";
+            lv2:name "Channel 4";            
+        ] , [
+            lv2:index 60;
+            lv2:symbol "channel_5";
+            lv2:name "Channel 5";            
+        ] , [
+            lv2:index 61;
+            lv2:symbol "channel_6";
+            lv2:name "Channel 6";            
+        ] , [
+            lv2:index 62;
+            lv2:symbol "channel_7";
+            lv2:name "Channel 7";
+        ] , [
+            lv2:index 63;
+            lv2:symbol "channel_8";
+            lv2:name "Channel 8";
+        ] , [
+            lv2:index 64;
+            lv2:symbol "channel_9";
+            lv2:name "Channel 9";
+        ] , [
+            lv2:index 65;
+            lv2:symbol "channel_10";
+            lv2:name "Channel 10";
+        ] , [
+            lv2:index 66;
+            lv2:symbol "channel_11";
+            lv2:name "Channel 11";
+        ] , [
+            lv2:index 67;
+            lv2:symbol "channel_12";
+            lv2:name "Channel 12";
+        ] , [
+            lv2:index 68;
+            lv2:symbol "channel_13";
+            lv2:name "Channel 13";
+        ] , [
+            lv2:index 69;
+            lv2:symbol "channel_14";
+            lv2:name "Channel 14";
+        ] , [
+            lv2:index 70;
+            lv2:symbol "channel_15";
+            lv2:name "Channel 15";
+        ] , [
+            lv2:index 71;
+            lv2:symbol "channel_16";
+            lv2:name "Channel 16";
+        ] , [
+            lv2:index 72;
             lv2:symbol "gate_1";
             lv2:name "Gate 1";            
         ] , [
-            lv2:index 41;
+            lv2:index 73;
             lv2:symbol "gate_2";
             lv2:name "Gate 2";            
         ] , [
-            lv2:index 42;
+            lv2:index 74;
             lv2:symbol "gate_3";
             lv2:name "Gate 3";            
         ] , [
-            lv2:index 43;
+            lv2:index 75;
             lv2:symbol "gate_4";
             lv2:name "Gate 4";            
         ] , [
-            lv2:index 44;
+            lv2:index 76;
             lv2:symbol "gate_5";
             lv2:name "Gate 5";            
         ] , [
-            lv2:index 45;
+            lv2:index 77;
             lv2:symbol "gate_6";
             lv2:name "Gate 6";            
         ] , [
-            lv2:index 46;
+            lv2:index 78;
             lv2:symbol "gate_7";
             lv2:name "Gate 7";
         ] , [
-            lv2:index 47;
+            lv2:index 79;
             lv2:symbol "gate_8";
             lv2:name "Gate 8";
         ] , [
-            lv2:index 48;
+            lv2:index 80;
             lv2:symbol "gate_9";
             lv2:name "Gate 9";
         ] , [
-            lv2:index 49;
+            lv2:index 81;
             lv2:symbol "gate_10";
             lv2:name "Gate 10";
         ] , [
-            lv2:index 50;
+            lv2:index 82;
             lv2:symbol "gate_11";
             lv2:name "Gate 11";
         ] , [
-            lv2:index 51;
+            lv2:index 83;
             lv2:symbol "gate_12";
             lv2:name "Gate 12";
         ] , [
-            lv2:index 52;
+            lv2:index 84;
             lv2:symbol "gate_13";
             lv2:name "Gate 13";
         ] , [
-            lv2:index 53;
+            lv2:index 85;
             lv2:symbol "gate_14";
             lv2:name "Gate 14";
         ] , [
-            lv2:index 54;
+            lv2:index 86;
             lv2:symbol "gate_15";
             lv2:name "Gate 15";
         ] , [
-            lv2:index 55;
+            lv2:index 87;
             lv2:symbol "gate_16";
             lv2:name "Gate 16";
         ] , [
-            lv2:index 56;
-            lv2:symbol "midi_channel";
-            lv2:name "MIDI Channel";
-        ] , [
-            lv2:index 57;
+            lv2:index 88;
             lv2:symbol "panic";
             lv2:name "MIDI Panic";
         ]

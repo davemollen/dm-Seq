@@ -228,6 +228,10 @@
 
 /* = NUMBER INPUT
 ================================================ */
+.mod-pedal{{{cns}}} .mod-number-input {
+    padding: 4px 0px;
+}
+
 .mod-pedal{{{cns}}} .mod-number-input .mod-number-input-image {
     background-image:url(/resources/assets/number-input.png{{{ns}}});
     background-repeat:no-repeat;
@@ -338,6 +342,8 @@
 .mod-pedal{{{cns}}} .mod-tabs-container {
     position: relative;
     z-index: 20;
+    padding-left: 8px;
+    align-self: start;
 }
 
 .mod-pedal{{{cns}}} .mod-tabs {
@@ -358,17 +364,18 @@
     text-align: center;
     color: #ECECEC;
     cursor: default;
-}
-
-.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:nth-child(1) {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
     border-bottom: none;
 }
 
-.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:nth-child(2) {
+.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:last-child {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+    border-bottom: 2.5px solid #797979;
 }
 
 .mod-pedal{{{cns}}} .mod-tabs > .mod-tab.selected {

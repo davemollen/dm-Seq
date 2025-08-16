@@ -10,6 +10,8 @@ use {
 pub struct SequencerData {
   pub notes: [u8; 16],
   pub velocities: [u8; 16],
+  pub note_lengths: [f32; 16],
+  pub channels: [u8; 16],
   pub gates: [bool; 16],
 }
 
@@ -17,6 +19,7 @@ pub struct NextStep {
   pub note: u8,
   pub velocity: u8,
   pub channel: u8,
+  pub note_length: f32,
   pub is_note_on: bool,
 }
 
@@ -60,6 +63,43 @@ impl DmSeq {
       ports.velocity_16.get(),
     ]
     .map(|vel| vel as u8);
+    let note_lengths = [
+      ports.note_length_1.get(),
+      ports.note_length_2.get(),
+      ports.note_length_3.get(),
+      ports.note_length_4.get(),
+      ports.note_length_5.get(),
+      ports.note_length_6.get(),
+      ports.note_length_7.get(),
+      ports.note_length_8.get(),
+      ports.note_length_9.get(),
+      ports.note_length_10.get(),
+      ports.note_length_11.get(),
+      ports.note_length_12.get(),
+      ports.note_length_13.get(),
+      ports.note_length_14.get(),
+      ports.note_length_15.get(),
+      ports.note_length_16.get(),
+    ];
+    let channels = [
+      ports.channel_1.get(),
+      ports.channel_2.get(),
+      ports.channel_3.get(),
+      ports.channel_4.get(),
+      ports.channel_5.get(),
+      ports.channel_6.get(),
+      ports.channel_7.get(),
+      ports.channel_8.get(),
+      ports.channel_9.get(),
+      ports.channel_10.get(),
+      ports.channel_11.get(),
+      ports.channel_12.get(),
+      ports.channel_13.get(),
+      ports.channel_14.get(),
+      ports.channel_15.get(),
+      ports.channel_16.get(),
+    ]
+    .map(|note_length| note_length as u8);
     let gates = [
       ports.gate_1.get() == 1.,
       ports.gate_2.get() == 1.,
@@ -82,6 +122,8 @@ impl DmSeq {
     return SequencerData {
       notes,
       velocities,
+      note_lengths,
+      channels,
       gates,
     };
   }
@@ -89,10 +131,16 @@ impl DmSeq {
   pub fn resolve_next_step(
     &mut self,
     ports: &mut Ports,
-    notes: [u8; 16],
-    velocities: [u8; 16],
-    gates: [bool; 16],
+    sequencer_data: &SequencerData,
   ) -> NextStep {
+    let SequencerData {
+      notes,
+      velocities,
+      note_lengths,
+      channels,
+      gates,
+    } = *sequencer_data;
+
     let next_step = self.current_step + 1;
     self.current_step = if next_step >= ports.steps.get() as usize {
       0
@@ -104,6 +152,8 @@ impl DmSeq {
       self.map_current_step_to_reordered_step(ports.order.get() as u8, ports.steps.get() as usize);
     let note = notes[reordered_step];
     let velocity = velocities[reordered_step];
+    let note_length = note_lengths[reordered_step];
+    let channel = channels[reordered_step];
     let gate = gates[reordered_step];
     let is_note_on = velocity > 0 && gate;
     ports.current_step.set(reordered_step as f32);
@@ -111,7 +161,8 @@ impl DmSeq {
     NextStep {
       note,
       velocity,
-      channel: ports.midi_channel.get() as u8,
+      channel,
+      note_length,
       is_note_on,
     }
   }

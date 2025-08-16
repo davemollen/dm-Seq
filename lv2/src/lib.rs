@@ -1,10 +1,7 @@
 mod event_queue;
 mod utils;
 use {
-  crate::{
-    event_queue::EventQueue,
-    utils::{NextStep, SequencerData},
-  },
+  crate::{event_queue::EventQueue, utils::NextStep},
   lv2::prelude::*,
 };
 
@@ -52,6 +49,38 @@ struct Ports {
   velocity_14: InputPort<InPlaceControl>,
   velocity_15: InputPort<InPlaceControl>,
   velocity_16: InputPort<InPlaceControl>,
+  note_length_1: InputPort<InPlaceControl>,
+  note_length_2: InputPort<InPlaceControl>,
+  note_length_3: InputPort<InPlaceControl>,
+  note_length_4: InputPort<InPlaceControl>,
+  note_length_5: InputPort<InPlaceControl>,
+  note_length_6: InputPort<InPlaceControl>,
+  note_length_7: InputPort<InPlaceControl>,
+  note_length_8: InputPort<InPlaceControl>,
+  note_length_9: InputPort<InPlaceControl>,
+  note_length_10: InputPort<InPlaceControl>,
+  note_length_11: InputPort<InPlaceControl>,
+  note_length_12: InputPort<InPlaceControl>,
+  note_length_13: InputPort<InPlaceControl>,
+  note_length_14: InputPort<InPlaceControl>,
+  note_length_15: InputPort<InPlaceControl>,
+  note_length_16: InputPort<InPlaceControl>,
+  channel_1: InputPort<InPlaceControl>,
+  channel_2: InputPort<InPlaceControl>,
+  channel_3: InputPort<InPlaceControl>,
+  channel_4: InputPort<InPlaceControl>,
+  channel_5: InputPort<InPlaceControl>,
+  channel_6: InputPort<InPlaceControl>,
+  channel_7: InputPort<InPlaceControl>,
+  channel_8: InputPort<InPlaceControl>,
+  channel_9: InputPort<InPlaceControl>,
+  channel_10: InputPort<InPlaceControl>,
+  channel_11: InputPort<InPlaceControl>,
+  channel_12: InputPort<InPlaceControl>,
+  channel_13: InputPort<InPlaceControl>,
+  channel_14: InputPort<InPlaceControl>,
+  channel_15: InputPort<InPlaceControl>,
+  channel_16: InputPort<InPlaceControl>,
   gate_1: InputPort<InPlaceControl>,
   gate_2: InputPort<InPlaceControl>,
   gate_3: InputPort<InPlaceControl>,
@@ -68,7 +97,6 @@ struct Ports {
   gate_14: InputPort<InPlaceControl>,
   gate_15: InputPort<InPlaceControl>,
   gate_16: InputPort<InPlaceControl>,
-  midi_channel: InputPort<InPlaceControl>,
   panic: InputPort<InPlaceControl>,
   current_step: OutputPort<InPlaceControl>,
   control: InputPort<AtomPort>,
@@ -143,11 +171,7 @@ impl Plugin for DmSeq {
       self.prev_steps = ports.steps.get() as usize;
     }
 
-    let SequencerData {
-      notes,
-      velocities,
-      gates,
-    } = self.map_sequencer_data(ports);
+    let sequencer_data = self.map_sequencer_data(ports);
 
     let control_sequence = match ports
       .control
@@ -188,8 +212,9 @@ impl Plugin for DmSeq {
               note,
               velocity,
               channel,
+              note_length,
               is_note_on,
-            } = self.resolve_next_step(ports, notes, velocities, gates);
+            } = self.resolve_next_step(ports, &sequencer_data);
 
             let division =
               self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
@@ -213,7 +238,7 @@ impl Plugin for DmSeq {
                 note,
                 velocity,
                 start_in_samples,
-                step_duration_in_samples.round() as i64,
+                (step_duration_in_samples * note_length).round() as i64,
                 ports.repeat_mode.get() == 0.,
               );
             }
@@ -227,8 +252,9 @@ impl Plugin for DmSeq {
               note,
               velocity,
               channel,
+              note_length,
               is_note_on,
-            } = self.resolve_next_step(ports, notes, velocities, gates);
+            } = self.resolve_next_step(ports, &sequencer_data);
 
             let division = self.map_step_duration_to_divisor(ports.step_duration.get()) / 4.;
             let step_duration_in_samples =
@@ -236,9 +262,8 @@ impl Plugin for DmSeq {
             let start_in_samples =
               self.get_swing_offset_in_samples(ports, step_duration_in_samples);
 
-            let step_duration_in_samples_rounded = step_duration_in_samples.round() as i64;
             self.free_running_next_step_frame =
-              self.free_running_block_start_frame + step_duration_in_samples_rounded;
+              self.free_running_block_start_frame + step_duration_in_samples.round() as i64;
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
@@ -248,7 +273,7 @@ impl Plugin for DmSeq {
                 note,
                 velocity,
                 start_in_samples,
-                step_duration_in_samples_rounded,
+                (step_duration_in_samples * note_length).round() as i64,
                 ports.repeat_mode.get() == 0.,
               );
             }
@@ -262,7 +287,8 @@ impl Plugin for DmSeq {
               velocity,
               channel,
               is_note_on,
-            } = self.resolve_next_step(ports, notes, velocities, gates);
+              ..
+            } = self.resolve_next_step(ports, &sequencer_data);
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
