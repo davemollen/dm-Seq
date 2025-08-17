@@ -85,42 +85,39 @@ impl EventQueue {
     channel: u8,
     note: u8,
     velocity: u8,
-    has_note_on: bool,
+    is_note_on: bool,
     legato_mode: bool,
   ) {
     let note = Note::try_from(note).unwrap();
     let channel = Channel::from_index(channel).unwrap();
     let velocity = Velocity::try_from(velocity).unwrap();
 
-    if !has_note_on {
-      // Send stored NoteOff
-      if let Some(midi_message) = &self.next_note_off {
-        self.push(0, midi_message.clone());
-      }
-      self.next_note_off = None;
-      return;
-    }
     if legato_mode {
-      let note_is_already_active = self
-        .queue
-        .iter()
-        .any(|ev| matches!(ev.data, MidiMessage::NoteOff(ch, n, _) if ch == channel && n == note));
+      let note_is_already_active = self.next_note_off.clone().map_or(
+        false,
+        |ev| matches!(ev, MidiMessage::NoteOff(ch, n, _) if ch == channel && n == note),
+      );
 
       // Do nothing when note is already active in legato mode
       if note_is_already_active {
         return;
       }
-    } else {
-      // Send note off for previously sent note
-      if let Some(midi_message) = &self.next_note_off {
-        self.push(0, midi_message.clone());
-      }
+    }
 
+    // Send note off for previously sent note
+    if let Some(midi_message) = &self.next_note_off {
+      self.push(0, midi_message.clone());
+    }
+
+    if is_note_on {
       // Schedule NoteOn
       self.push(0, MidiMessage::NoteOn(channel, note, velocity));
 
       // Store NoteOff to trigger later
       self.next_note_off = Some(MidiMessage::NoteOff(channel, note, Velocity::MIN));
+    } else {
+      // No note to turn off
+      self.next_note_off = None;
     }
   }
 
