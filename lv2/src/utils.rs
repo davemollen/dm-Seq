@@ -212,10 +212,15 @@ impl DmSeq {
         *val = i;
       });
 
-    while self.last_shuffled_step == self.shuffled_steps[steps - 1] {
+    loop {
       fastrand::shuffle(&mut self.shuffled_steps);
+      // Reshuffle if this shuffle starts with the previous last element
+      if self.shuffled_steps[0] == self.last_shuffled_step {
+        continue;
+      }
+      break;
     }
-    self.last_shuffled_step = self.shuffled_steps[steps - 1]
+    self.last_shuffled_step = self.shuffled_steps[steps - 1];
   }
 
   pub fn update_position(&mut self, object_reader: ObjectReader<'static>) {
@@ -246,7 +251,7 @@ impl DmSeq {
     self.is_in_swing_cycle = true;
     self.next_step_frame = 0;
     self.event_queue.stop_all_notes();
-    self.should_alternate_sequence = false;
+    self.should_alternate_sequence = true;
   }
 
   pub fn midi_panic(&self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
@@ -338,11 +343,14 @@ impl DmSeq {
         // Brownian
         let random = fastrand::f32();
         if random < 0.25 {
-          // go back to previous step
+          // go to previous step
           self.current_step = (self.current_step + steps - 2) % steps;
-        } else if random < 0.5 {
+          return self.current_step;
+        }
+        if random < 0.5 {
           // stay on current step
           self.current_step = (self.current_step + steps - 1) % steps;
+          return self.current_step;
         };
         // advance to the next step
         self.current_step
@@ -359,7 +367,10 @@ impl DmSeq {
           self.current_step
         }
       }
-      _ => self.current_step,
+      _ => {
+        // Forward
+        self.current_step
+      }
     };
     self.prev_steps = steps;
     return reordered_step;

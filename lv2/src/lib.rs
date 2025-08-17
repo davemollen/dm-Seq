@@ -163,7 +163,7 @@ impl Plugin for DmSeq {
       shuffled_steps: Vec::with_capacity(16),
       last_shuffled_step: usize::MAX,
       is_in_swing_cycle: true,
-      should_alternate_sequence: false,
+      should_alternate_sequence: true,
       prev_steps: 8,
       event_queue: EventQueue::new(),
       sample_rate,
