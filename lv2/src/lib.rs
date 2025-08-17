@@ -198,7 +198,7 @@ impl Plugin for DmSeq {
       }
     }
 
-    if ports.clock_mode.get() == 1. && self.host_speed == 0. {
+    if ports.clock_mode.get() == 0. && self.host_speed == 0. {
       self.handle_transport_stopped(ports);
     } else if ports.panic.get() == 1. {
       let mut midi_out_sequence = match ports.midi_out.init(
@@ -212,7 +212,7 @@ impl Plugin for DmSeq {
       self.event_queue.clear();
     } else {
       match ports.clock_mode.get() {
-        1. => {
+        0. => {
           // clock_mode == Host Sync
           while self.next_step_frame < self.block_start_frame + sample_count as i64 {
             let NextStep {
@@ -251,7 +251,7 @@ impl Plugin for DmSeq {
             }
           }
         }
-        2. => {
+        1. => {
           // clock_mode == Free Running
           while self.free_running_next_step_frame
             < self.free_running_block_start_frame + sample_count as i64

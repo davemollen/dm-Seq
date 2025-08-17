@@ -52,7 +52,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:symbol "steps";
 		lv2:name "Steps";
 		lv2:portProperty lv2:integer;
-		lv2:default 8;
+		lv2:default 16;
 		lv2:minimum 1;
 		lv2:maximum 16;
 	] , [
@@ -96,9 +96,9 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:minimum 0;
 		lv2:maximum 2;
 		lv2:default 0;
-		lv2:scalePoint [ rdfs:label "Trigger";		rdf:value 0 ; ] ;
-		lv2:scalePoint [ rdfs:label "Host Sync";    rdf:value 1 ; ] ;
-		lv2:scalePoint [ rdfs:label "Free Running";	rdf:value 2 ; ] ;
+		lv2:scalePoint [ rdfs:label "Host Sync";    rdf:value 0 ; ] ;
+		lv2:scalePoint [ rdfs:label "Free Running";	rdf:value 1 ; ] ;
+		lv2:scalePoint [ rdfs:label "Trigger";		rdf:value 2 ; ] ;
 		lv2:portProperty lv2:integer, lv2:enumeration;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
