@@ -1,9 +1,12 @@
 mod event_queue;
+mod synced_phasor;
 mod utils;
 use {
-  crate::{event_queue::EventQueue, utils::NextStep},
+  event_queue::EventQueue,
   lv2::prelude::*,
   std::{array, usize},
+  synced_phasor::SyncedPhasor,
+  utils::NextStep,
 };
 
 #[derive(PortCollection)]
@@ -125,7 +128,6 @@ struct DmSeq {
   host_bpm: f32,
   host_speed: f32,
   beat_unit: i32,
-  beat: f32,
   block_start_frame: i64,
   next_step_frame: i64,
   free_running_block_start_frame: i64,
@@ -138,6 +140,7 @@ struct DmSeq {
   prev_steps: usize,
   prev_clock_mode: f32,
   event_queue: EventQueue,
+  synced_phasor: SyncedPhasor,
   sample_rate: f32,
 }
 
@@ -155,7 +158,6 @@ impl Plugin for DmSeq {
       host_bpm: 120.,
       host_speed: 0.,
       beat_unit: 4,
-      beat: 0.,
       block_start_frame: 0,
       next_step_frame: 0,
       free_running_block_start_frame: 0,
@@ -168,6 +170,7 @@ impl Plugin for DmSeq {
       prev_steps: 8,
       prev_clock_mode: 0.,
       event_queue: EventQueue::new(),
+      synced_phasor: SyncedPhasor::new(),
       sample_rate,
     })
   }
@@ -234,16 +237,15 @@ impl Plugin for DmSeq {
             let swing_offset_in_samples =
               self.get_swing_offset_in_samples(ports, step_duration_in_samples);
 
-            let phase = (self.beat * division).fract();
-            let (step_offset_in_samples, sync_offset_in_samples) =
-              if self.next_step_frame == 0 || self.prev_clock_mode != 0. {
-                (0., (1. - phase) * step_duration_in_samples)
-              } else {
-                (
-                  if phase > 0.5 { 1. - phase } else { -phase } * step_duration_in_samples,
-                  0.,
-                )
-              };
+            let phase = (self.synced_phasor.get_value() * division * 4.).fract();
+            let (step_offset_in_samples, sync_offset_in_samples) = if self.prev_clock_mode != 0. {
+              (0., (1. - phase) * step_duration_in_samples)
+            } else {
+              (
+                if phase > 0.5 { 1. - phase } else { -phase } * step_duration_in_samples,
+                0.,
+              )
+            };
             self.next_step_frame = (self.block_start_frame as f32
               + step_duration_in_samples
               + step_offset_in_samples

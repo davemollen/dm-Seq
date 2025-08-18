@@ -242,9 +242,10 @@ impl DmSeq {
         self.beat_unit = property.read(self.urids.atom.int, ()).unwrap_or(4);
       }
       if property_header.key == self.urids.time.bar_beat {
-        self.beat = property
+        let beat = property
           .read(self.urids.atom.float, ())
           .map_or(0., |beat| beat.fract());
+        self.synced_phasor.process(beat, 0.25);
       }
       if property_header.key == self.urids.time.frame {
         self.block_start_frame = property.read(self.urids.atom.long, ()).unwrap_or(0);
@@ -259,6 +260,7 @@ impl DmSeq {
     self.next_step_frame = 0;
     self.event_queue.stop_all_notes();
     self.should_alternate_sequence = true;
+    self.synced_phasor.reset();
   }
 
   pub fn midi_panic(&self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
