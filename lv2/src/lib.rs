@@ -3,7 +3,7 @@ mod utils;
 use {
   crate::{event_queue::EventQueue, utils::NextStep},
   lv2::prelude::*,
-  std::usize,
+  std::{array, usize},
 };
 
 #[derive(PortCollection)]
@@ -131,7 +131,7 @@ struct DmSeq {
   free_running_block_start_frame: i64,
   free_running_next_step_frame: i64,
   is_initialized: bool,
-  shuffled_steps: Vec<usize>,
+  shuffled_steps: [usize; 16],
   last_shuffled_step: usize,
   is_in_swing_cycle: bool,
   should_alternate_sequence: bool,
@@ -160,7 +160,7 @@ impl Plugin for DmSeq {
       free_running_block_start_frame: 0,
       free_running_next_step_frame: 0,
       is_initialized: false,
-      shuffled_steps: Vec::with_capacity(16),
+      shuffled_steps: array::from_fn(|i| i),
       last_shuffled_step: usize::MAX,
       is_in_swing_cycle: true,
       should_alternate_sequence: true,

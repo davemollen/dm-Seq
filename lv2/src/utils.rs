@@ -203,25 +203,27 @@ impl DmSeq {
   }
 
   pub fn set_shuffled_steps(&mut self, steps: usize, should_reshuffle_on_repeat: bool) {
-    self.shuffled_steps.resize(steps, 0);
-    self
-      .shuffled_steps
-      .iter_mut()
-      .enumerate()
-      .for_each(|(i, val)| {
-        *val = i;
-      });
-
     if should_reshuffle_on_repeat {
       loop {
         fastrand::shuffle(&mut self.shuffled_steps);
+        let first_shuffled_step = self
+          .shuffled_steps
+          .iter()
+          .find(|step| **step < steps)
+          .unwrap();
+
         // Reshuffle if this shuffle starts with the previous last element
-        if self.shuffled_steps[0] == self.last_shuffled_step {
+        if *first_shuffled_step == self.last_shuffled_step {
           continue;
         }
+        self.last_shuffled_step = self
+          .shuffled_steps
+          .iter()
+          .filter(|step| **step < steps)
+          .last()
+          .map_or(self.last_shuffled_step, |x| *x);
         break;
       }
-      self.last_shuffled_step = self.shuffled_steps[steps - 1];
     } else {
       fastrand::shuffle(&mut self.shuffled_steps);
     }
@@ -344,7 +346,12 @@ impl DmSeq {
         if self.current_step == 0 || steps != self.prev_steps {
           self.set_shuffled_steps(steps, false);
         }
-        self.shuffled_steps[self.current_step]
+        self
+          .shuffled_steps
+          .iter()
+          .filter(|step| **step < steps)
+          .nth(self.current_step)
+          .map_or(self.current_step, |x| *x)
       }
       6 => {
         // Shuffle B
@@ -354,7 +361,12 @@ impl DmSeq {
         if self.current_step == 0 || steps != self.prev_steps {
           self.set_shuffled_steps(steps, true);
         }
-        self.shuffled_steps[self.current_step]
+        self
+          .shuffled_steps
+          .iter()
+          .filter(|step| **step < steps)
+          .nth(self.current_step)
+          .map_or(self.current_step, |x| *x)
       }
       7 => {
         // Brownian
