@@ -172,6 +172,13 @@ impl EventQueue {
     });
   }
 
+  pub fn stop_triggered_note(&mut self) {
+    if let Some(midi_message) = &self.next_note_off {
+      self.push(0, midi_message.clone());
+      self.next_note_off = None;
+    }
+  }
+
   pub fn clear(&mut self) {
     self.queue.clear();
   }

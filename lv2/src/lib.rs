@@ -290,6 +290,10 @@ impl Plugin for DmSeq {
         }
         _ => {
           // clock_mode == Trigger
+          if ports.enable.get() == 0. {
+            self.event_queue.stop_triggered_note();
+          }
+
           if ports.trigger.get() == 1. {
             let NextStep {
               note,
@@ -299,16 +303,15 @@ impl Plugin for DmSeq {
               ..
             } = self.resolve_next_step(ports, &sequencer_data);
 
-            if ports.enable.get() == 0. {
-              self.event_queue.stop_all_notes();
+            if ports.enable.get() != 0. {
+              self.event_queue.schedule_triggered_note(
+                channel,
+                note,
+                velocity,
+                is_note_on,
+                ports.repeat_mode.get() == 0.,
+              );
             }
-            self.event_queue.schedule_triggered_note(
-              channel,
-              note,
-              velocity,
-              is_note_on,
-              ports.repeat_mode.get() == 0.,
-            );
           }
         }
       }
