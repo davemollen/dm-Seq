@@ -234,14 +234,15 @@ impl Plugin for DmSeq {
               self.get_swing_offset_in_samples(ports, step_duration_in_samples);
 
             let phase = (self.beat * division).fract();
-            let (step_offset_in_samples, sync_offset_in_samples) = if self.prev_clock_mode != 0. {
-              (0., (1. - phase) * step_duration_in_samples)
-            } else {
-              (
-                if phase > 0.5 { 1. - phase } else { -phase } * step_duration_in_samples,
-                0.,
-              )
-            };
+            let (step_offset_in_samples, sync_offset_in_samples) =
+              if self.next_step_frame == 0 || self.prev_clock_mode != 0. {
+                (0., (1. - phase) * step_duration_in_samples)
+              } else {
+                (
+                  if phase > 0.5 { 1. - phase } else { -phase } * step_duration_in_samples,
+                  0.,
+                )
+              };
             self.next_step_frame = (self.block_start_frame as f32
               + step_duration_in_samples
               + step_offset_in_samples
