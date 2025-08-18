@@ -260,7 +260,10 @@ impl Plugin for DmSeq {
                 step,
                 is_note_on,
                 (sync_offset_in_samples + swing_offset_in_samples).round() as i64,
-                (step_duration_in_samples * note_length).round() as i64,
+                (step_duration_in_samples * note_length
+                  + step_offset_in_samples
+                  + sync_offset_in_samples)
+                  .round() as i64,
                 ports.repeat_mode.get() == 0.,
               );
             }
