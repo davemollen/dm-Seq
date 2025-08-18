@@ -136,6 +136,7 @@ struct DmSeq {
   is_in_swing_cycle: bool,
   should_alternate_sequence: bool,
   prev_steps: usize,
+  prev_clock_mode: f32,
   event_queue: EventQueue,
   sample_rate: f32,
 }
@@ -165,6 +166,7 @@ impl Plugin for DmSeq {
       is_in_swing_cycle: true,
       should_alternate_sequence: true,
       prev_steps: 8,
+      prev_clock_mode: 0.,
       event_queue: EventQueue::new(),
       sample_rate,
     })
@@ -175,6 +177,7 @@ impl Plugin for DmSeq {
       self.set_shuffled_steps(ports.steps.get() as usize, false);
       self.is_initialized = true;
       self.prev_steps = ports.steps.get() as usize;
+      self.prev_clock_mode = ports.clock_mode.get();
     }
 
     let sequencer_data = self.map_sequencer_data(ports);
@@ -227,15 +230,23 @@ impl Plugin for DmSeq {
               self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
             let step_duration_in_samples =
               self.get_step_duration_in_samples(self.host_bpm, division);
-            let start_in_samples =
+            let swing_offset_in_samples =
               self.get_swing_offset_in_samples(ports, step_duration_in_samples);
 
             let phase = (self.beat * division).fract();
-            let offset_phase = if phase > 0.5 { 1. - phase } else { -phase };
-            let step_offset_in_samples = offset_phase * step_duration_in_samples;
-            self.next_step_frame =
-              (self.block_start_frame as f32 + step_duration_in_samples + step_offset_in_samples)
-                .round() as i64;
+            let (step_offset_in_samples, sync_offset_in_samples) = if self.prev_clock_mode != 0. {
+              (0., (1. - phase) * step_duration_in_samples)
+            } else {
+              (
+                if phase > 0.5 { 1. - phase } else { -phase } * step_duration_in_samples,
+                0.,
+              )
+            };
+            self.next_step_frame = (self.block_start_frame as f32
+              + step_duration_in_samples
+              + step_offset_in_samples
+              + sync_offset_in_samples)
+              .round() as i64;
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
@@ -244,7 +255,7 @@ impl Plugin for DmSeq {
                 channel,
                 note,
                 velocity,
-                start_in_samples,
+                (sync_offset_in_samples + swing_offset_in_samples).round() as i64,
                 (step_duration_in_samples * note_length).round() as i64,
                 ports.repeat_mode.get() == 0.,
               );
@@ -280,7 +291,7 @@ impl Plugin for DmSeq {
                 channel,
                 note,
                 velocity,
-                start_in_samples,
+                start_in_samples.round() as i64,
                 (step_duration_in_samples * note_length).round() as i64,
                 ports.repeat_mode.get() == 0.,
               );
@@ -335,6 +346,8 @@ impl Plugin for DmSeq {
         _ => (),
       };
     }
+
+    self.prev_clock_mode = ports.clock_mode.get();
   }
 
   fn activate(&mut self, _features: &mut Self::InitFeatures) {

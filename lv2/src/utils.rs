@@ -193,12 +193,12 @@ impl DmSeq {
     &self,
     ports: &mut Ports,
     step_duration_in_samples: f32,
-  ) -> i64 {
+  ) -> f32 {
     let step_is_an_even_number = self.current_step & 1 == 0;
     if step_is_an_even_number {
-      0
+      0.
     } else {
-      (ports.swing.get() * 0.5 * step_duration_in_samples).round() as i64
+      ports.swing.get() * 0.5 * step_duration_in_samples
     }
   }
 
