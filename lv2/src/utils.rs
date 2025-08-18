@@ -334,6 +334,9 @@ impl DmSeq {
       }
       5 => {
         // Shuffle
+        if steps == 1 {
+          return self.current_step;
+        }
         if self.current_step == 0 || steps != self.prev_steps {
           self.set_shuffled_steps(steps);
         }
