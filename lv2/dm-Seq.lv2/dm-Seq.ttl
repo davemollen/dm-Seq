@@ -113,9 +113,10 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:scalePoint [ rdfs:label "Alternate";    rdf:value 2 ; ] ;
 		lv2:scalePoint [ rdfs:label "Pendulum";    	rdf:value 3 ; ] ;
 		lv2:scalePoint [ rdfs:label "Random";		rdf:value 4 ; ] ;
-		lv2:scalePoint [ rdfs:label "Shuffle";		rdf:value 5 ; ] ;
-		lv2:scalePoint [ rdfs:label "Brownian";		rdf:value 6 ; ] ;
-		lv2:scalePoint [ rdfs:label "Either Way";   rdf:value 7 ; ] ;
+		lv2:scalePoint [ rdfs:label "Shuffle A";	rdf:value 5 ; ] ;
+		lv2:scalePoint [ rdfs:label "Shuffle B";	rdf:value 6 ; ] ;
+		lv2:scalePoint [ rdfs:label "Brownian";		rdf:value 7 ; ] ;
+		lv2:scalePoint [ rdfs:label "Either Way";   rdf:value 8 ; ] ;
 		lv2:portProperty lv2:integer, lv2:enumeration;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;

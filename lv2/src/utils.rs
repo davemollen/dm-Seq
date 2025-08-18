@@ -202,7 +202,7 @@ impl DmSeq {
     }
   }
 
-  pub fn set_shuffled_steps(&mut self, steps: usize) {
+  pub fn set_shuffled_steps(&mut self, steps: usize, should_reshuffle_on_repeat: bool) {
     self.shuffled_steps.resize(steps, 0);
     self
       .shuffled_steps
@@ -212,15 +212,19 @@ impl DmSeq {
         *val = i;
       });
 
-    loop {
-      fastrand::shuffle(&mut self.shuffled_steps);
-      // Reshuffle if this shuffle starts with the previous last element
-      if self.shuffled_steps[0] == self.last_shuffled_step {
-        continue;
+    if should_reshuffle_on_repeat {
+      loop {
+        fastrand::shuffle(&mut self.shuffled_steps);
+        // Reshuffle if this shuffle starts with the previous last element
+        if self.shuffled_steps[0] == self.last_shuffled_step {
+          continue;
+        }
+        break;
       }
-      break;
+      self.last_shuffled_step = self.shuffled_steps[steps - 1];
+    } else {
+      fastrand::shuffle(&mut self.shuffled_steps);
     }
-    self.last_shuffled_step = self.shuffled_steps[steps - 1];
   }
 
   pub fn update_position(&mut self, object_reader: ObjectReader<'static>) {
@@ -333,16 +337,26 @@ impl DmSeq {
         fastrand::usize(0..steps)
       }
       5 => {
-        // Shuffle
+        // Shuffle A
         if steps == 1 {
           return self.current_step;
         }
         if self.current_step == 0 || steps != self.prev_steps {
-          self.set_shuffled_steps(steps);
+          self.set_shuffled_steps(steps, false);
         }
         self.shuffled_steps[self.current_step]
       }
       6 => {
+        // Shuffle B
+        if steps == 1 {
+          return self.current_step;
+        }
+        if self.current_step == 0 || steps != self.prev_steps {
+          self.set_shuffled_steps(steps, true);
+        }
+        self.shuffled_steps[self.current_step]
+      }
+      7 => {
         // Brownian
         let random = fastrand::f32();
         if random < 0.25 {
@@ -358,7 +372,7 @@ impl DmSeq {
         // advance to the next step
         self.current_step
       }
-      7 => {
+      8 => {
         // Either Way
         if self.current_step == 0 {
           self.should_alternate_sequence = fastrand::bool();

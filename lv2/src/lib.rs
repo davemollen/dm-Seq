@@ -172,7 +172,7 @@ impl Plugin for DmSeq {
 
   fn run(&mut self, ports: &mut Ports, _features: &mut Self::AudioFeatures, sample_count: u32) {
     if !self.is_initialized {
-      self.set_shuffled_steps(ports.steps.get() as usize);
+      self.set_shuffled_steps(ports.steps.get() as usize, false);
       self.is_initialized = true;
       self.prev_steps = ports.steps.get() as usize;
     }
