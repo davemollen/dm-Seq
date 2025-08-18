@@ -125,7 +125,7 @@ pub struct URIDs {
 struct DmSeq {
   current_step: usize,
   urids: URIDs,
-  host_bpm: f32,
+  host_bpm: f64,
   host_speed: f32,
   beat_unit: i32,
   block_start_frame: i64,
@@ -231,7 +231,7 @@ impl Plugin for DmSeq {
             } = self.resolve_next_step(ports, &sequencer_data);
 
             let division =
-              self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f32;
+              self.map_step_duration_to_divisor(ports.step_duration.get()) / self.beat_unit as f64;
             let step_duration_in_samples =
               self.get_step_duration_in_samples(self.host_bpm, division);
             let swing_offset_in_samples =
@@ -246,7 +246,7 @@ impl Plugin for DmSeq {
                 0.,
               )
             };
-            self.next_step_frame = (self.block_start_frame as f32
+            self.next_step_frame = (self.block_start_frame as f64
               + step_duration_in_samples
               + step_offset_in_samples
               + sync_offset_in_samples)
@@ -287,7 +287,7 @@ impl Plugin for DmSeq {
 
             let division = self.map_step_duration_to_divisor(ports.step_duration.get()) / 4.;
             let step_duration_in_samples =
-              self.get_step_duration_in_samples(ports.bpm.get(), division);
+              self.get_step_duration_in_samples(ports.bpm.get() as f64, division);
             let start_in_samples =
               self.get_swing_offset_in_samples(ports, step_duration_in_samples);
 

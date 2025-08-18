@@ -10,7 +10,7 @@ use {
 pub struct SequencerData {
   pub notes: [u8; 16],
   pub velocities: [u8; 16],
-  pub note_lengths: [f32; 16],
+  pub note_lengths: [f64; 16],
   pub channels: [u8; 16],
   pub gates: [bool; 16],
 }
@@ -19,7 +19,7 @@ pub struct NextStep {
   pub note: u8,
   pub velocity: u8,
   pub channel: u8,
-  pub note_length: f32,
+  pub note_length: f64,
   pub step: usize,
   pub is_note_on: bool,
 }
@@ -81,7 +81,8 @@ impl DmSeq {
       ports.note_length_14.get(),
       ports.note_length_15.get(),
       ports.note_length_16.get(),
-    ];
+    ]
+    .map(|note_length| note_length as f64);
     let channels = [
       ports.channel_1.get(),
       ports.channel_2.get(),
@@ -163,7 +164,7 @@ impl DmSeq {
     }
   }
 
-  pub fn map_step_duration_to_divisor(&self, step_duration: f32) -> f32 {
+  pub fn map_step_duration_to_divisor(&self, step_duration: f32) -> f64 {
     /*
     lv2:scalePoint [ rdfs:label "64th";      	rdf:value 0 ; ] ;
     lv2:scalePoint [ rdfs:label "32th";      	rdf:value 1 ; ] ;
@@ -185,21 +186,21 @@ impl DmSeq {
     }
   }
 
-  pub fn get_step_duration_in_samples(&self, bpm: f32, division: f32) -> f32 {
-    let samples_per_beat = self.sample_rate * 60.0 / bpm;
+  pub fn get_step_duration_in_samples(&self, bpm: f64, division: f64) -> f64 {
+    let samples_per_beat = self.sample_rate as f64 * 60.0 / bpm;
     samples_per_beat * division.recip()
   }
 
   pub fn get_swing_offset_in_samples(
     &self,
     ports: &mut Ports,
-    step_duration_in_samples: f32,
-  ) -> f32 {
+    step_duration_in_samples: f64,
+  ) -> f64 {
     let step_is_an_even_number = self.current_step & 1 == 0;
     if step_is_an_even_number {
       0.
     } else {
-      ports.swing.get() * 0.5 * step_duration_in_samples
+      ports.swing.get() as f64 * 0.5 * step_duration_in_samples
     }
   }
 
@@ -233,7 +234,7 @@ impl DmSeq {
   pub fn update_position(&mut self, object_reader: ObjectReader<'static>) {
     for (property_header, property) in object_reader {
       if property_header.key == self.urids.time.beats_per_minute {
-        self.host_bpm = property.read(self.urids.atom.float, ()).unwrap_or(120.);
+        self.host_bpm = property.read(self.urids.atom.float, ()).unwrap_or(120.) as f64;
       }
       if property_header.key == self.urids.time.speed {
         self.host_speed = property.read(self.urids.atom.float, ()).unwrap_or(0.);
@@ -243,7 +244,7 @@ impl DmSeq {
       }
       if property_header.key == self.urids.time.bar_beat {
         let beat = property
-          .read(self.urids.atom.float, ())
+          .read(self.urids.atom.double, ())
           .map_or(0., |beat| beat.fract());
         self.synced_phasor.process(beat, 0.25);
       }

@@ -1,6 +1,6 @@
 pub struct SyncedPhasor {
-  last_ramp: f32,
-  phase: f32,
+  last_ramp: f64,
+  phase: f64,
 }
 
 impl SyncedPhasor {
@@ -11,7 +11,7 @@ impl SyncedPhasor {
     }
   }
 
-  pub fn process(&mut self, ramp: f32, speed: f32) -> f32 {
+  pub fn process(&mut self, ramp: f64, speed: f64) -> f64 {
     let mut delta = ramp - self.last_ramp;
     if delta < 0. {
       delta += 1.;
@@ -23,7 +23,7 @@ impl SyncedPhasor {
     self.phase
   }
 
-  pub fn get_value(&self) -> f32 {
+  pub fn get_value(&self) -> f64 {
     self.phase
   }
 
@@ -37,7 +37,7 @@ impl SyncedPhasor {
 mod tests {
   use crate::synced_phasor::SyncedPhasor;
 
-  fn assert_approx_eq(left: f32, right: f32) {
+  fn assert_approx_eq(left: f64, right: f64) {
     let left = (left * 100000.).round() / 100000.;
     let right = (right * 100000.).round() / 100000.;
     assert_eq!(left, right);
@@ -56,7 +56,7 @@ mod tests {
     assert_approx_eq(phasor.process(0.4, 0.5), 0.7);
     assert_approx_eq(phasor.process(0.6, 0.5), 0.8);
     assert_approx_eq(phasor.process(0.8, 0.5), 0.9);
-    assert_approx_eq(phasor.process(0.0, 0.5), 0.);
+    assert_approx_eq(phasor.process(0.0, 0.5), 1.0);
     assert_approx_eq(phasor.process(0.2, 0.5), 0.1);
     assert_approx_eq(phasor.process(0.4, 0.5), 0.2);
     assert_approx_eq(phasor.process(0.6, 0.5), 0.3);
