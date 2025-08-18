@@ -360,34 +360,37 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    height: 64px;
 }
 
-.mod-pedal{{{cns}}} .mod-tabs > .mod-tab {
+.mod-pedal{{{cns}}} .mod-tabs .mod-tab {
     width: 80px;
     height: 28px;
-    line-height: 25px;
     border: 2.5px solid #797979;
+    cursor: default;
+    border-bottom: none;
+    overflow: hidden;
+}
+
+.mod-pedal{{{cns}}} .mod-tabs .mod-tab .tab-content {
     font-size: 10px;
+    line-height: 25px;
     font-weight: bold;
     text-align: center;
     color: #ECECEC;
-    cursor: default;
-    border-bottom: none;
 }
 
-.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:first-child {
+.mod-pedal{{{cns}}} .mod-tabs .mod-tab:first-child {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 }
 
-.mod-pedal{{{cns}}} .mod-tabs > .mod-tab:last-child {
+.mod-pedal{{{cns}}} .mod-tabs .mod-tab:last-child {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     border-bottom: 2.5px solid #797979;
 }
 
-.mod-pedal{{{cns}}} .mod-tabs > .mod-tab.selected {
+.mod-pedal{{{cns}}} .mod-tabs .mod-tab.selected .tab-content {
     color: #211F24;
     background-color: #0CC0C0;
 }

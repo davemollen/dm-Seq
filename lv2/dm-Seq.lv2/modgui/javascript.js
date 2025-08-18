@@ -4,18 +4,26 @@ function(event) {
       case "clock_mode": {
         const trigger = event.icon.find("[mod-port-symbol=trigger]").parent();
         const bpm = event.icon.find("[mod-port-symbol=bpm]").parent();
+        const note_length_knobs = event.icon.find('[mod-port-symbol^="note_length_"]').parent();
+        const length_tab = event.icon.find(".mod-tab.length .tab-content");
         if(value == 0) {
           // clock_mode == Host Sync
-          trigger.addClass("disabled")
-          bpm.addClass("disabled")
+          trigger.addClass("disabled");
+          bpm.addClass("disabled");
+          note_length_knobs.removeClass("disabled");
+          length_tab.removeClass("disabled");
         } else if(value == 1) {
           // clock_mode == Free Running
-          trigger.addClass("disabled")
-          bpm.removeClass("disabled")
+          trigger.addClass("disabled");
+          bpm.removeClass("disabled");
+          note_length_knobs.removeClass("disabled");
+          length_tab.removeClass("disabled");
         } else if(value == 2) {
           // clock_mode == Trigger
           trigger.removeClass("disabled");
-          bpm.addClass("disabled")
+          bpm.addClass("disabled");
+          note_length_knobs.addClass("disabled");
+          length_tab.addClass("disabled");
         }
         break;
       }
@@ -35,7 +43,7 @@ function(event) {
         break;
       }
       case 'current_step': {
-        const current_step = Math.round(value)
+        const current_step = Math.round(value);
         event.icon.find("[mod-role=input-control-port][id]").each(function () { $(this).removeClass("highlight"); });
 		    event.icon.find("[mod-role=input-control-port][id="+current_step+"]").each(function () { $(this).addClass("highlight"); });
         break;
