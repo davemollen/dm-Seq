@@ -22,8 +22,12 @@
     justify-content: space-between;
 }
 
-.mod-pedal{{{cns}}} .align-items-center {
-    align-items: center;
+.mod-pedal{{{cns}}} .align-items-end {
+    align-items: end;
+}
+
+.mod-pedal{{{cns}}} .align-self-center {
+    align-self: center;
 }
 
 .mod-pedal{{{cns}}} .flex-1 {
@@ -73,7 +77,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px;
-    gap: 48px;
+    gap: 56px;
 }
 
 .mod-pedal{{{cns}}} .global-controls > .row > .column {
