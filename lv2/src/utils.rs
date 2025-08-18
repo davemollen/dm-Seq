@@ -20,6 +20,7 @@ pub struct NextStep {
   pub velocity: u8,
   pub channel: u8,
   pub note_length: f32,
+  pub step: usize,
   pub is_note_on: bool,
 }
 
@@ -151,13 +152,13 @@ impl DmSeq {
     let channel = channels[repositioned_step];
     let gate = gates[repositioned_step];
     let is_note_on = velocity > 0 && gate;
-    ports.current_step.set(repositioned_step as f32);
 
     NextStep {
       note,
       velocity,
       channel,
       note_length,
+      step: repositioned_step,
       is_note_on,
     }
   }

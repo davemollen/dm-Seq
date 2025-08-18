@@ -223,6 +223,7 @@ impl Plugin for DmSeq {
               velocity,
               channel,
               note_length,
+              step,
               is_note_on,
             } = self.resolve_next_step(ports, &sequencer_data);
 
@@ -251,11 +252,13 @@ impl Plugin for DmSeq {
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
-            } else if is_note_on {
+            } else {
               self.event_queue.schedule_note(
                 channel,
                 note,
                 velocity,
+                step,
+                is_note_on,
                 (sync_offset_in_samples + swing_offset_in_samples).round() as i64,
                 (step_duration_in_samples * note_length).round() as i64,
                 ports.repeat_mode.get() == 0.,
@@ -273,6 +276,7 @@ impl Plugin for DmSeq {
               velocity,
               channel,
               note_length,
+              step,
               is_note_on,
             } = self.resolve_next_step(ports, &sequencer_data);
 
@@ -287,11 +291,13 @@ impl Plugin for DmSeq {
 
             if ports.enable.get() == 0. {
               self.event_queue.stop_all_notes();
-            } else if is_note_on {
+            } else {
               self.event_queue.schedule_note(
                 channel,
                 note,
                 velocity,
+                step,
+                is_note_on,
                 start_in_samples.round() as i64,
                 (step_duration_in_samples * note_length).round() as i64,
                 ports.repeat_mode.get() == 0.,
@@ -311,6 +317,7 @@ impl Plugin for DmSeq {
               note,
               velocity,
               channel,
+              step,
               is_note_on,
               ..
             } = self.resolve_next_step(ports, &sequencer_data);
@@ -320,6 +327,7 @@ impl Plugin for DmSeq {
                 channel,
                 note,
                 velocity,
+                step,
                 is_note_on,
                 ports.repeat_mode.get() == 0.,
               );
@@ -337,15 +345,21 @@ impl Plugin for DmSeq {
       None => return,
     };
     let events = self.event_queue.pop_block_events(sample_count as i64);
-    for (offset, midi_message) in events {
-      match midi_out_sequence.init(
-        TimeStamp::Frames(offset),
-        self.urids.midi.wmidi,
-        midi_message,
-      ) {
-        None => return,
-        _ => (),
-      };
+    for (offset, midi_message, step) in events {
+      if let Some(step) = step {
+        ports.current_step.set(step as f32);
+      }
+
+      if let Some(midi_message) = midi_message {
+        match midi_out_sequence.init(
+          TimeStamp::Frames(offset),
+          self.urids.midi.wmidi,
+          midi_message,
+        ) {
+          None => continue,
+          _ => (),
+        };
+      }
     }
 
     self.prev_clock_mode = ports.clock_mode.get();
