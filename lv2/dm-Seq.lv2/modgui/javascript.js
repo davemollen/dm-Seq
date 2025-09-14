@@ -1,5 +1,21 @@
 function(event) {
+  const MIDI_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
+  function map_midi_number_to_midi_note(midi_number) {
+    const index = midi_number % 12;
+    const note = MIDI_NOTES[index];
+    const octave = (parseInt(midi_number / 12) - 2).toString();
+    return note + octave;
+  }
+
+
   function handle_port_values(symbol, value) {
+    if(symbol.match(/^note_\d+$/)) { // matches note_ followed by and ended with a number
+      const midi_note = map_midi_number_to_midi_note(value)
+      const element = event.icon.find('[mod-port-symbol=' + symbol + ']').parent();
+      element.find('[mod-role="input-control-value"]').text(midi_note);
+      return;
+    }
     switch (symbol) {
       case "clock_mode": {
         const trigger = event.icon.find("[mod-port-symbol=trigger]").parent();
@@ -45,7 +61,7 @@ function(event) {
       case 'current_step': {
         const current_step = Math.round(value);
         event.icon.find("[mod-role=input-control-port][id]").each(function () { $(this).removeClass("highlight"); });
-		    event.icon.find("[mod-role=input-control-port][id="+current_step+"]").each(function () { $(this).addClass("highlight"); });
+        event.icon.find("[mod-role=input-control-port][id="+current_step+"]").each(function () { $(this).addClass("highlight"); });
         break;
       }
       case "trigger": {

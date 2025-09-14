@@ -101,7 +101,7 @@ impl DmSeq {
       ports.channel_15.get(),
       ports.channel_16.get(),
     ]
-    .map(|note_length| note_length as u8);
+    .map(|channel| channel as u8 - 1);
     let gates = [
       ports.gate_1.get() == 1.,
       ports.gate_2.get() == 1.,
