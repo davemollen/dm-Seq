@@ -8,7 +8,6 @@ function(event) {
     return note + octave;
   }
 
-
   function handle_port_values(symbol, value) {
     if(symbol.match(/^note_\d+$/)) { // matches note_ followed by and ended with a number
       const midi_note = map_midi_number_to_midi_note(value)
@@ -47,9 +46,10 @@ function(event) {
         const notes = event.icon.find("#notes");
         const velocities = event.icon.find("#velocities");
         const note_lengths = event.icon.find("#note-lengths");
+        const chances = event.icon.find("#chances");
         const channels = event.icon.find("#channels");
         
-        [notes, velocities, note_lengths, channels].forEach(function(element, index) {
+        [notes, velocities, note_lengths, chances, channels].forEach(function(element, index) {
           if(index == value) {
             element.removeClass("hide");
           } else {
