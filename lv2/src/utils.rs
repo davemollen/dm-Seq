@@ -11,6 +11,7 @@ pub struct SequencerData {
   pub notes: [u8; 16],
   pub velocities: [u8; 16],
   pub note_lengths: [f64; 16],
+  pub chance: [f32; 16],
   pub channels: [u8; 16],
   pub gates: [bool; 16],
 }
@@ -83,6 +84,24 @@ impl DmSeq {
       ports.note_length_16.get(),
     ]
     .map(|note_length| note_length as f64);
+    let chance = [
+      ports.chance_1.get(),
+      ports.chance_2.get(),
+      ports.chance_3.get(),
+      ports.chance_4.get(),
+      ports.chance_5.get(),
+      ports.chance_6.get(),
+      ports.chance_7.get(),
+      ports.chance_8.get(),
+      ports.chance_9.get(),
+      ports.chance_10.get(),
+      ports.chance_11.get(),
+      ports.chance_12.get(),
+      ports.chance_13.get(),
+      ports.chance_14.get(),
+      ports.chance_15.get(),
+      ports.chance_16.get(),
+    ];
     let channels = [
       ports.channel_1.get(),
       ports.channel_2.get(),
@@ -125,6 +144,7 @@ impl DmSeq {
       notes,
       velocities,
       note_lengths,
+      chance,
       channels,
       gates,
     };
@@ -139,6 +159,7 @@ impl DmSeq {
       notes,
       velocities,
       note_lengths,
+      chance,
       channels,
       gates,
     } = *sequencer_data;
@@ -152,7 +173,15 @@ impl DmSeq {
     let note_length = note_lengths[repositioned_step];
     let channel = channels[repositioned_step];
     let gate = gates[repositioned_step];
-    let is_note_on = velocity > 0 && gate;
+    let chance = chance[repositioned_step];
+    let probability_gate = if chance == 0. {
+      false
+    } else if chance == 1. {
+      true
+    } else {
+      fastrand::f32() < chance
+    };
+    let is_note_on = velocity > 0 && gate && probability_gate;
 
     NextStep {
       note,
