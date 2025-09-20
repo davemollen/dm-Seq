@@ -16,6 +16,7 @@ struct Ports {
   steps: InputPort<InPlaceControl>,
   step_offset: InputPort<InPlaceControl>,
   swing: InputPort<InPlaceControl>,
+  transpose: InputPort<InPlaceControl>,
   step_duration: InputPort<InPlaceControl>,
   clock_mode: InputPort<InPlaceControl>,
   order: InputPort<InPlaceControl>,
