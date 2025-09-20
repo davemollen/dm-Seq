@@ -75,6 +75,16 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
 		lv2:index 5;
+		lv2:symbol "transpose";
+		lv2:name "Transpose";
+		lv2:portProperty lv2:integer;
+		lv2:default 0;
+		lv2:minimum -48;
+		lv2:maximum 48;
+		units:unit units:semitone12TET;
+	] , [
+		a lv2:InputPort, lv2:ControlPort;
+		lv2:index 6;
 		lv2:symbol "step_duration";
 		lv2:name "Step Duration";
 		lv2:minimum 0;
@@ -90,7 +100,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:portProperty lv2:integer, lv2:enumeration;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 6;
+		lv2:index 7;
 		lv2:symbol "clock_mode";
 		lv2:name "Clock Mode";
 		lv2:minimum 0;
@@ -102,7 +112,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:portProperty lv2:integer, lv2:enumeration;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 7;
+		lv2:index 8;
 		lv2:symbol "order";
 		lv2:name "Order";
 		lv2:minimum 0;
@@ -120,7 +130,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:portProperty lv2:integer, lv2:enumeration;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 8;
+		lv2:index 9;
 		lv2:symbol "repeat_mode";
 		lv2:name "Repeat Mode";
 		lv2:minimum 0;
@@ -131,7 +141,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:portProperty lv2:integer, lv2:enumeration;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 9;
+		lv2:index 10;
 		lv2:symbol "knob_target";
 		lv2:name "Knob Target";
 		lv2:minimum 0;
@@ -145,7 +155,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:portProperty lv2:integer, lv2:enumeration, pprops:notOnGui;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 10;
+		lv2:index 11;
 		lv2:symbol "bpm";
 		lv2:name "BPM";
 		lv2:minimum  20.0;
@@ -154,7 +164,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:bpm;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 11;
+		lv2:index 12;
 		lv2:symbol "note_1";
 		lv2:name "Note 1";
 		lv2:portProperty lv2:integer;
@@ -163,7 +173,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 12;
+		lv2:index 13;
 		lv2:symbol "note_2";
 		lv2:name "Note 2";
 		lv2:portProperty lv2:integer;
@@ -172,7 +182,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 13;
+		lv2:index 14;
 		lv2:symbol "note_3";
 		lv2:name "Note 3";
 		lv2:portProperty lv2:integer;
@@ -181,7 +191,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 14;
+		lv2:index 15;
 		lv2:symbol "note_4";
 		lv2:name "Note 4";
 		lv2:portProperty lv2:integer;
@@ -190,7 +200,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 15;
+		lv2:index 16;
 		lv2:symbol "note_5";
 		lv2:name "Note 5";
 		lv2:portProperty lv2:integer;
@@ -199,7 +209,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 16;
+		lv2:index 17;
 		lv2:symbol "note_6";
 		lv2:name "Note 6";
 		lv2:portProperty lv2:integer;
@@ -208,7 +218,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 17;
+		lv2:index 18;
 		lv2:symbol "note_7";
 		lv2:name "Note 7";
 		lv2:portProperty lv2:integer;
@@ -217,7 +227,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 18;
+		lv2:index 19;
 		lv2:symbol "note_8";
 		lv2:name "Note 8";
 		lv2:portProperty lv2:integer;
@@ -226,7 +236,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 19;
+		lv2:index 20;
 		lv2:symbol "note_9";
 		lv2:name "Note 9";
 		lv2:portProperty lv2:integer;
@@ -235,7 +245,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 20;
+		lv2:index 21;
 		lv2:symbol "note_10";
 		lv2:name "Note 10";
 		lv2:portProperty lv2:integer;
@@ -244,7 +254,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 21;
+		lv2:index 22;
 		lv2:symbol "note_11";
 		lv2:name "Note 11";
 		lv2:portProperty lv2:integer;
@@ -253,7 +263,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 22;
+		lv2:index 23;
 		lv2:symbol "note_12";
 		lv2:name "Note 12";
 		lv2:portProperty lv2:integer;
@@ -262,7 +272,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 23;
+		lv2:index 24;
 		lv2:symbol "note_13";
 		lv2:name "Note 13";
 		lv2:portProperty lv2:integer;
@@ -271,7 +281,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 24;
+		lv2:index 25;
 		lv2:symbol "note_14";
 		lv2:name "Note 14";
 		lv2:portProperty lv2:integer;
@@ -280,7 +290,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 25;
+		lv2:index 26;
 		lv2:symbol "note_15";
 		lv2:name "Note 15";
 		lv2:portProperty lv2:integer;
@@ -289,7 +299,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 26;
+		lv2:index 27;
 		lv2:symbol "note_16";
 		lv2:name "Note 16";
 		lv2:portProperty lv2:integer;
@@ -298,7 +308,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 27;
+		lv2:index 28;
 		lv2:symbol "velocity_1";
 		lv2:name "Velocity 1";
 		lv2:portProperty lv2:integer;
@@ -307,7 +317,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 28;
+		lv2:index 29;
 		lv2:symbol "velocity_2";
 		lv2:name "Velocity 2";
 		lv2:portProperty lv2:integer;
@@ -316,7 +326,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 29;
+		lv2:index 30;
 		lv2:symbol "velocity_3";
 		lv2:name "Velocity 3";
 		lv2:portProperty lv2:integer;
@@ -325,7 +335,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 30;
+		lv2:index 31;
 		lv2:symbol "velocity_4";
 		lv2:name "Velocity 4";
 		lv2:portProperty lv2:integer;
@@ -334,7 +344,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 31;
+		lv2:index 32;
 		lv2:symbol "velocity_5";
 		lv2:name "Velocity 5";
 		lv2:portProperty lv2:integer;
@@ -343,7 +353,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 32;
+		lv2:index 33;
 		lv2:symbol "velocity_6";
 		lv2:name "Velocity 6";
 		lv2:portProperty lv2:integer;
@@ -352,7 +362,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 33;
+		lv2:index 34;
 		lv2:symbol "velocity_7";
 		lv2:name "Velocity 7";
 		lv2:portProperty lv2:integer;
@@ -361,7 +371,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 34;
+		lv2:index 35;
 		lv2:symbol "velocity_8";
 		lv2:name "Velocity 8";
 		lv2:portProperty lv2:integer;
@@ -370,7 +380,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 35;
+		lv2:index 36;
 		lv2:symbol "velocity_9";
 		lv2:name "Velocity 9";
 		lv2:portProperty lv2:integer;
@@ -379,7 +389,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 36;
+		lv2:index 37;
 		lv2:symbol "velocity_10";
 		lv2:name "Velocity 10";
 		lv2:portProperty lv2:integer;
@@ -388,7 +398,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 37;
+		lv2:index 38;
 		lv2:symbol "velocity_11";
 		lv2:name "Velocity 11";
 		lv2:portProperty lv2:integer;
@@ -397,7 +407,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 38;
+		lv2:index 39;
 		lv2:symbol "velocity_12";
 		lv2:name "Velocity 12";
 		lv2:portProperty lv2:integer;
@@ -406,7 +416,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 39;
+		lv2:index 40;
 		lv2:symbol "velocity_13";
 		lv2:name "Velocity 13";
 		lv2:portProperty lv2:integer;
@@ -415,7 +425,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 40;
+		lv2:index 41;
 		lv2:symbol "velocity_14";
 		lv2:name "Velocity 14";
 		lv2:portProperty lv2:integer;
@@ -424,7 +434,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 41;
+		lv2:index 42;
 		lv2:symbol "velocity_15";
 		lv2:name "Velocity 15";
 		lv2:portProperty lv2:integer;
@@ -433,7 +443,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 42;
+		lv2:index 43;
 		lv2:symbol "velocity_16";
 		lv2:name "Velocity 16";
 		lv2:portProperty lv2:integer;
@@ -442,7 +452,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 127;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 43;
+		lv2:index 44;
 		lv2:symbol "note_length_1";
 		lv2:name "Length 1";
 		lv2:portProperty pprops:logarithmic ;
@@ -452,7 +462,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 44;
+		lv2:index 45;
 		lv2:symbol "note_length_2";
 		lv2:name "Length 2";
 		lv2:portProperty pprops:logarithmic ;
@@ -462,7 +472,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 45;
+		lv2:index 46;
 		lv2:symbol "note_length_3";
 		lv2:name "Length 3";
 		lv2:portProperty pprops:logarithmic ;
@@ -472,7 +482,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 46;
+		lv2:index 47;
 		lv2:symbol "note_length_4";
 		lv2:name "Length 4";
 		lv2:portProperty pprops:logarithmic ;
@@ -482,7 +492,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 47;
+		lv2:index 48;
 		lv2:symbol "note_length_5";
 		lv2:name "Length 5";
 		lv2:portProperty pprops:logarithmic ;
@@ -492,7 +502,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 48;
+		lv2:index 49;
 		lv2:symbol "note_length_6";
 		lv2:name "Length 6";
 		lv2:portProperty pprops:logarithmic ;
@@ -502,7 +512,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 49;
+		lv2:index 50;
 		lv2:symbol "note_length_7";
 		lv2:name "Length 7";
 		lv2:portProperty pprops:logarithmic ;
@@ -512,7 +522,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 50;
+		lv2:index 51;
 		lv2:symbol "note_length_8";
 		lv2:name "Length 8";
 		lv2:portProperty pprops:logarithmic ;
@@ -522,7 +532,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 51;
+		lv2:index 52;
 		lv2:symbol "note_length_9";
 		lv2:name "Length 9";
 		lv2:portProperty pprops:logarithmic ;
@@ -532,7 +542,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 52;
+		lv2:index 53;
 		lv2:symbol "note_length_10";
 		lv2:name "Length 10";
 		lv2:portProperty pprops:logarithmic ;
@@ -542,7 +552,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 53;
+		lv2:index 54;
 		lv2:symbol "note_length_11";
 		lv2:name "Length 11";
 		lv2:portProperty pprops:logarithmic ;
@@ -552,7 +562,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 54;
+		lv2:index 55;
 		lv2:symbol "note_length_12";
 		lv2:name "Length 12";
 		lv2:portProperty pprops:logarithmic ;
@@ -562,7 +572,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 55;
+		lv2:index 56;
 		lv2:symbol "note_length_13";
 		lv2:name "Length 13";
 		lv2:portProperty pprops:logarithmic ;
@@ -572,7 +582,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 56;
+		lv2:index 57;
 		lv2:symbol "note_length_14";
 		lv2:name "Length 14";
 		lv2:portProperty pprops:logarithmic ;
@@ -582,7 +592,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 57;
+		lv2:index 58;
 		lv2:symbol "note_length_15";
 		lv2:name "Length 15";
 		lv2:portProperty pprops:logarithmic ;
@@ -592,7 +602,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 58;
+		lv2:index 59;
 		lv2:symbol "note_length_16";
 		lv2:name "Length 16";
 		lv2:portProperty pprops:logarithmic ;
@@ -602,7 +612,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:coef;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 59;
+		lv2:index 60;
 		lv2:symbol "chance_1";
 		lv2:name "Chance 1";
 		lv2:default 100.0;
@@ -611,7 +621,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 60;
+		lv2:index 61;
 		lv2:symbol "chance_2";
 		lv2:name "Chance 2";
 		lv2:default 100.0;
@@ -620,7 +630,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 61;
+		lv2:index 62;
 		lv2:symbol "chance_3";
 		lv2:name "Chance 3";
 		lv2:default 100.0;
@@ -629,7 +639,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 62;
+		lv2:index 63;
 		lv2:symbol "chance_4";
 		lv2:name "Chance 4";
 		lv2:default 100.0;
@@ -638,7 +648,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 63;
+		lv2:index 64;
 		lv2:symbol "chance_5";
 		lv2:name "Chance 5";
 		lv2:default 100.0;
@@ -647,7 +657,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 64;
+		lv2:index 65;
 		lv2:symbol "chance_6";
 		lv2:name "Chance 6";
 		lv2:default 100.0;
@@ -656,7 +666,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 65;
+		lv2:index 66;
 		lv2:symbol "chance_7";
 		lv2:name "Chance 7";
 		lv2:default 100.0;
@@ -665,7 +675,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 66;
+		lv2:index 67;
 		lv2:symbol "chance_8";
 		lv2:name "Chance 8";
 		lv2:default 100.0;
@@ -674,7 +684,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 67;
+		lv2:index 68;
 		lv2:symbol "chance_9";
 		lv2:name "Chance 9";
 		lv2:default 100.0;
@@ -683,7 +693,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 68;
+		lv2:index 69;
 		lv2:symbol "chance_10";
 		lv2:name "Chance 10";
 		lv2:default 100.0;
@@ -692,7 +702,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 69;
+		lv2:index 70;
 		lv2:symbol "chance_11";
 		lv2:name "Chance 11";
 		lv2:default 100.0;
@@ -701,7 +711,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 70;
+		lv2:index 71;
 		lv2:symbol "chance_12";
 		lv2:name "Chance 12";
 		lv2:default 100.0;
@@ -710,7 +720,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 71;
+		lv2:index 72;
 		lv2:symbol "chance_13";
 		lv2:name "Chance 13";
 		lv2:default 100.0;
@@ -719,7 +729,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 72;
+		lv2:index 73;
 		lv2:symbol "chance_14";
 		lv2:name "Chance 14";
 		lv2:default 100.0;
@@ -728,7 +738,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 73;
+		lv2:index 74;
 		lv2:symbol "chance_15";
 		lv2:name "Chance 15";
 		lv2:default 100.0;
@@ -737,7 +747,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 74;
+		lv2:index 75;
 		lv2:symbol "chance_16";
 		lv2:name "Chance 16";
 		lv2:default 100.0;
@@ -746,7 +756,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		units:unit units:pc;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 75;
+		lv2:index 76;
 		lv2:symbol "channel_1";
 		lv2:name "Channel 1";
 		lv2:portProperty lv2:integer;
@@ -755,7 +765,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 76;
+		lv2:index 77;
 		lv2:symbol "channel_2";
 		lv2:name "Channel 2";
 		lv2:portProperty lv2:integer;
@@ -764,7 +774,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 77;
+		lv2:index 78;
 		lv2:symbol "channel_3";
 		lv2:name "Channel 3";
 		lv2:portProperty lv2:integer;
@@ -773,7 +783,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 78;
+		lv2:index 79;
 		lv2:symbol "channel_4";
 		lv2:name "Channel 4";
 		lv2:portProperty lv2:integer;
@@ -782,7 +792,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 79;
+		lv2:index 80;
 		lv2:symbol "channel_5";
 		lv2:name "Channel 5";
 		lv2:portProperty lv2:integer;
@@ -791,7 +801,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 80;
+		lv2:index 81;
 		lv2:symbol "channel_6";
 		lv2:name "Channel 6";
 		lv2:portProperty lv2:integer;
@@ -800,7 +810,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 81;
+		lv2:index 82;
 		lv2:symbol "channel_7";
 		lv2:name "Channel 7";
 		lv2:portProperty lv2:integer;
@@ -809,7 +819,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 82;
+		lv2:index 83;
 		lv2:symbol "channel_8";
 		lv2:name "Channel 8";
 		lv2:portProperty lv2:integer;
@@ -818,7 +828,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 83;
+		lv2:index 84;
 		lv2:symbol "channel_9";
 		lv2:name "Channel 9";
 		lv2:portProperty lv2:integer;
@@ -827,7 +837,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 84;
+		lv2:index 85;
 		lv2:symbol "channel_10";
 		lv2:name "Channel 10";
 		lv2:portProperty lv2:integer;
@@ -836,7 +846,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 85;
+		lv2:index 86;
 		lv2:symbol "channel_11";
 		lv2:name "Channel 11";
 		lv2:portProperty lv2:integer;
@@ -845,7 +855,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 86;
+		lv2:index 87;
 		lv2:symbol "channel_12";
 		lv2:name "Channel 12";
 		lv2:portProperty lv2:integer;
@@ -854,7 +864,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 87;
+		lv2:index 88;
 		lv2:symbol "channel_13";
 		lv2:name "Channel 13";
 		lv2:portProperty lv2:integer;
@@ -863,7 +873,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 88;
+		lv2:index 89;
 		lv2:symbol "channel_14";
 		lv2:name "Channel 14";
 		lv2:portProperty lv2:integer;
@@ -872,7 +882,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 89;
+		lv2:index 90;
 		lv2:symbol "channel_15";
 		lv2:name "Channel 15";
 		lv2:portProperty lv2:integer;
@@ -881,7 +891,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 90;
+		lv2:index 91;
 		lv2:symbol "channel_16";
 		lv2:name "Channel 16";
 		lv2:portProperty lv2:integer;
@@ -890,7 +900,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 16;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 91;
+		lv2:index 92;
 		lv2:symbol "gate_1";
 		lv2:name "Gate 1";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -899,7 +909,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 92;
+		lv2:index 93;
 		lv2:symbol "gate_2";
 		lv2:name "Gate 2";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -908,7 +918,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 93;
+		lv2:index 94;
 		lv2:symbol "gate_3";
 		lv2:name "Gate 3";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -917,7 +927,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 94;
+		lv2:index 95;
 		lv2:symbol "gate_4";
 		lv2:name "Gate 4";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -926,7 +936,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 95;
+		lv2:index 96;
 		lv2:symbol "gate_5";
 		lv2:name "Gate 5";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -935,7 +945,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 96;
+		lv2:index 97;
 		lv2:symbol "gate_6";
 		lv2:name "Gate 6";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -944,7 +954,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 97;
+		lv2:index 98;
 		lv2:symbol "gate_7";
 		lv2:name "Gate 7";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -953,7 +963,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 98;
+		lv2:index 99;
 		lv2:symbol "gate_8";
 		lv2:name "Gate 8";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -962,7 +972,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 99;
+		lv2:index 100;
 		lv2:symbol "gate_9";
 		lv2:name "Gate 9";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -971,7 +981,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 100;
+		lv2:index 101;
 		lv2:symbol "gate_10";
 		lv2:name "Gate 10";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -980,7 +990,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 101;
+		lv2:index 102;
 		lv2:symbol "gate_11";
 		lv2:name "Gate 11";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -989,7 +999,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 102;
+		lv2:index 103;
 		lv2:symbol "gate_12";
 		lv2:name "Gate 12";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -998,7 +1008,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 103;
+		lv2:index 104;
 		lv2:symbol "gate_13";
 		lv2:name "Gate 13";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -1007,7 +1017,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 104;
+		lv2:index 105;
 		lv2:symbol "gate_14";
 		lv2:name "Gate 14";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -1016,7 +1026,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 105;
+		lv2:index 106;
 		lv2:symbol "gate_15";
 		lv2:name "Gate 15";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -1025,7 +1035,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 106;
+		lv2:index 107;
 		lv2:symbol "gate_16";
 		lv2:name "Gate 16";
 		lv2:portProperty lv2:integer, lv2:toggled;
@@ -1034,7 +1044,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;
 	] , [
 		a lv2:InputPort, lv2:ControlPort;
-		lv2:index 107;
+		lv2:index 108;
 		lv2:symbol "panic";
 		lv2:name "MIDI Panic";
 		lv2:portProperty lv2:integer, lv2:toggled, pprops:trigger;
@@ -1043,7 +1053,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		lv2:maximum 1;	
 	] , [
 		a lv2:OutputPort, lv2:ControlPort ;
-		lv2:index 108;
+		lv2:index 109;
 		lv2:symbol "current_step";
 		lv2:name "Current Step";
 		lv2:minimum -1;
@@ -1054,14 +1064,14 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 		a atom:AtomPort, lv2:InputPort;
 		atom:bufferType atom:Sequence;
 		atom:supports time:Position;
-		lv2:index 109;
+		lv2:index 110;
 		lv2:symbol "control";
 		lv2:name "Control";
 	] , [
 		a atom:AtomPort, lv2:OutputPort;
 		atom:bufferType atom:Sequence;
 		atom:supports midi:MidiEvent ;
-		lv2:index 110;
+		lv2:index 111;
 		lv2:symbol "midi_out";
 		lv2:name "MIDI Out";
 	] .

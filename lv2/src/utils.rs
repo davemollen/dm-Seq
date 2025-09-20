@@ -169,7 +169,7 @@ impl DmSeq {
     let reordered_step = self.map_current_step_to_reordered_step(ports);
     let repositioned_step =
       (reordered_step + ports.step_offset.get() as usize) % ports.steps.get() as usize;
-    let note = notes[repositioned_step];
+    let note = (notes[repositioned_step] as i8 + ports.transpose.get() as i8).clamp(0, 127) as u8;
     let velocity = velocities[repositioned_step];
     let note_length = note_lengths[repositioned_step];
     let channel = channels[repositioned_step];

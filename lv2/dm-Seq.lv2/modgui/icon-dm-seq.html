@@ -1262,35 +1262,17 @@
             <div
               class="mod-knob-image"
               mod-role="input-control-port"
-              mod-port-symbol="steps"
-            ></div>
-            <div class="mod-param-title">STEPS</div>
-          </div>
-          <div class="mod-knob">
-            <div
-              class="mod-knob-image"
-              mod-role="input-control-port"
-              mod-port-symbol="step_offset"
-            ></div>
-            <div class="mod-param-title">STEP OFFSET</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="mod-knob">
-            <div
-              class="mod-knob-image"
-              mod-role="input-control-port"
               mod-port-symbol="swing"
             ></div>
             <div class="mod-param-title">SWING</div>
           </div>
-          <div class="mod-number-input">
+          <div class="mod-knob">
             <div
-              class="mod-number-input-image"
+              class="mod-knob-image"
               mod-role="input-control-port"
-              mod-port-symbol="bpm"
+              mod-port-symbol="transpose"
             ></div>
-            <div class="mod-param-title">BPM</div>
+            <div class="mod-param-title">TRANSPOSE</div>
           </div>
           <div>
             <div
@@ -1303,37 +1285,36 @@
             <div class="mod-param-title">PANIC</div>
           </div>
         </div>
+        <div class="column align-self-center">
+          <div class="mod-knob">
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
+              mod-port-symbol="steps"
+            ></div>
+            <div class="mod-param-title">STEPS</div>
+          </div>
+          <div class="mod-knob">
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
+              mod-port-symbol="step_offset"
+            ></div>
+            <div class="mod-param-title">STEP OFFSET</div>
+          </div>
+          <div class="mod-number-input">
+            <div
+              class="mod-number-input-image"
+              mod-role="input-control-port"
+              mod-port-symbol="bpm"
+            ></div>
+            <div class="mod-param-title">BPM</div>
+          </div>
+        </div>
         <div class="column gap-8 justify-between">
           <div class="mod-enumerated-group-container">
-            {{#controls.4}}
-            <div class="mod-enumerated-group first">
-              <div
-                class="mod-enumerated"
-                mod-role="input-control-port"
-                mod-port-symbol="{{symbol}}"
-                mod-widget="custom-select"
-              >
-                <div
-                  mod-role="input-control-value"
-                  contenteditable="false"
-                  mod-port-symbol="{{symbol}}"
-                  class="mod-enumerated-selected"
-                ></div>
-                <div class="mod-enumerated-list">
-                  {{#scalePoints}}
-                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
-                    {{label}}
-                  </div>
-                  {{/scalePoints}}
-                </div>
-              </div>
-            </div>
-            <div class="mod-param-title">{{name}}</div>
-            {{/controls.4}}
-          </div>
-          <div class="mod-enumerated-group-container">
             {{#controls.5}}
-            <div class="mod-enumerated-group second">
+            <div class="mod-enumerated-group first">
               <div
                 class="mod-enumerated"
                 mod-role="input-control-port"
@@ -1360,7 +1341,7 @@
           </div>
           <div class="mod-enumerated-group-container">
             {{#controls.6}}
-            <div class="mod-enumerated-group third">
+            <div class="mod-enumerated-group second">
               <div
                 class="mod-enumerated"
                 mod-role="input-control-port"
@@ -1387,7 +1368,7 @@
           </div>
           <div class="mod-enumerated-group-container">
             {{#controls.7}}
-            <div class="mod-enumerated-group fourth">
+            <div class="mod-enumerated-group third">
               <div
                 class="mod-enumerated"
                 mod-role="input-control-port"
@@ -1411,6 +1392,33 @@
             </div>
             <div class="mod-param-title">{{name}}</div>
             {{/controls.7}}
+          </div>
+          <div class="mod-enumerated-group-container">
+            {{#controls.8}}
+            <div class="mod-enumerated-group fourth">
+              <div
+                class="mod-enumerated"
+                mod-role="input-control-port"
+                mod-port-symbol="{{symbol}}"
+                mod-widget="custom-select"
+              >
+                <div
+                  mod-role="input-control-value"
+                  contenteditable="false"
+                  mod-port-symbol="{{symbol}}"
+                  class="mod-enumerated-selected"
+                ></div>
+                <div class="mod-enumerated-list">
+                  {{#scalePoints}}
+                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
+                    {{label}}
+                  </div>
+                  {{/scalePoints}}
+                </div>
+              </div>
+            </div>
+            <div class="mod-param-title">{{name}}</div>
+            {{/controls.8}}
           </div>
         </div>
       </div>
