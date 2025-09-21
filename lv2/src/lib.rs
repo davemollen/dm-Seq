@@ -1,9 +1,11 @@
 mod event_queue;
+mod midi_notes;
 mod synced_phasor;
 mod utils;
 use {
   event_queue::EventQueue,
   lv2::prelude::*,
+  midi_notes::MidiNotes,
   std::{array, usize},
   synced_phasor::SyncedPhasor,
   utils::NextStep,
@@ -159,6 +161,7 @@ struct DmSeq {
   event_queue: EventQueue,
   synced_phasor: SyncedPhasor,
   sample_rate: f32,
+  midi_notes: MidiNotes,
 }
 
 impl Plugin for DmSeq {
@@ -189,6 +192,7 @@ impl Plugin for DmSeq {
       event_queue: EventQueue::new(),
       synced_phasor: SyncedPhasor::new(),
       sample_rate,
+      midi_notes: MidiNotes::new(),
     })
   }
 
@@ -211,14 +215,8 @@ impl Plugin for DmSeq {
     };
 
     for (_time_stamp, atom) in control_sequence {
-      if let Some((object_header, object_reader)) = atom
-        .read(self.urids.atom.object, ())
-        .or_else(|| atom.read(self.urids.atom.blank, ()))
-      {
-        if object_header.otype == self.urids.time.position_class {
-          self.update_position(object_reader);
-        }
-      }
+      self.update_transport_position(atom);
+      self.read_midi_events(atom);
     }
 
     if ports.clock_mode.get() == 0. && self.host_speed == 0. {

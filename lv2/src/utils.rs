@@ -1,8 +1,8 @@
 use {
   crate::{DmSeq, Ports},
   lv2::{
-    lv2_atom::{object::ObjectReader, sequence::SequenceWriter},
-    prelude::TimeStamp,
+    lv2_atom::sequence::SequenceWriter,
+    prelude::{TimeStamp, UnidentifiedAtom},
   },
   wmidi::{Channel, ControlNumber, ControlValue, MidiMessage},
 };
@@ -169,7 +169,11 @@ impl DmSeq {
     let reordered_step = self.map_current_step_to_reordered_step(ports);
     let repositioned_step =
       (reordered_step + ports.step_offset.get() as usize) % ports.steps.get() as usize;
-    let note = (notes[repositioned_step] as i8 + ports.transpose.get() as i8).clamp(0, 127) as u8;
+    let transpose = self
+      .midi_notes
+      .get_note()
+      .map_or(ports.transpose.get() as i8, |note| 60 - note as i8);
+    let note = (notes[repositioned_step] as i8 + transpose).clamp(0, 127) as u8;
     let velocity = velocities[repositioned_step];
     let note_length = note_lengths[repositioned_step];
     let channel = channels[repositioned_step];
@@ -261,27 +265,55 @@ impl DmSeq {
     }
   }
 
-  pub fn update_position(&mut self, object_reader: ObjectReader<'static>) {
-    for (property_header, property) in object_reader {
-      if property_header.key == self.urids.time.beats_per_minute {
-        self.host_bpm = property.read(self.urids.atom.float, ()).unwrap_or(120.) as f64;
-      }
-      if property_header.key == self.urids.time.speed {
-        self.host_speed = property.read(self.urids.atom.float, ()).unwrap_or(0.);
-      }
-      if property_header.key == self.urids.time.beat_unit {
-        self.beat_unit = property.read(self.urids.atom.int, ()).unwrap_or(4);
-      }
-      if property_header.key == self.urids.time.bar_beat {
-        let beat = property
-          .read(self.urids.atom.double, ())
-          .map_or(0., |beat| beat.fract());
-        self.synced_phasor.process(beat, 0.25);
-      }
-      if property_header.key == self.urids.time.frame {
-        self.block_start_frame = property.read(self.urids.atom.long, ()).unwrap_or(0);
+  pub fn update_transport_position(&mut self, atom: UnidentifiedAtom<'static>) {
+    if let Some((object_header, object_reader)) = atom
+      .read(self.urids.atom.object, ())
+      .or_else(|| atom.read(self.urids.atom.blank, ()))
+    {
+      if object_header.otype == self.urids.time.position_class {
+        for (property_header, property) in object_reader {
+          if property_header.key == self.urids.time.beats_per_minute {
+            self.host_bpm = property.read(self.urids.atom.float, ()).unwrap_or(120.) as f64;
+          }
+          if property_header.key == self.urids.time.speed {
+            self.host_speed = property.read(self.urids.atom.float, ()).unwrap_or(0.);
+          }
+          if property_header.key == self.urids.time.beat_unit {
+            self.beat_unit = property.read(self.urids.atom.int, ()).unwrap_or(4);
+          }
+          if property_header.key == self.urids.time.bar_beat {
+            let beat = property
+              .read(self.urids.atom.double, ())
+              .map_or(0., |beat| beat.fract());
+            self.synced_phasor.process(beat, 0.25);
+          }
+          if property_header.key == self.urids.time.frame {
+            self.block_start_frame = property.read(self.urids.atom.long, ()).unwrap_or(0);
+          }
+        }
       }
     }
+  }
+
+  pub fn read_midi_events(&mut self, atom: UnidentifiedAtom<'static>) {
+    let midi_message = match atom.read(self.urids.midi.wmidi, ()) {
+      Some(midi_message) => midi_message,
+      None => return,
+    };
+
+    match midi_message {
+      MidiMessage::NoteOn(_, note, _) => {
+        self.midi_notes.note_on(note.into());
+      }
+      MidiMessage::NoteOff(_, note, _) => {
+        self.midi_notes.note_off(note.into());
+      }
+      MidiMessage::ControlChange(_, cc, value) => match u8::from(cc) {
+        64 => self.midi_notes.sustain(u8::from(value) > 0),
+        _ => (),
+      },
+      _ => (),
+    };
   }
 
   pub fn handle_transport_stopped(&mut self, ports: &mut Ports) {
@@ -294,7 +326,9 @@ impl DmSeq {
     self.synced_phasor.reset();
   }
 
-  pub fn midi_panic(&self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
+  pub fn midi_panic(&mut self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
+    self.midi_notes.remove_notes();
+
     for channel in 0..16 {
       // set sustain to zero
       midi_out_sequence.init(

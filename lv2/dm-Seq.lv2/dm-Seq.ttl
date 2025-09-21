@@ -1063,7 +1063,7 @@ A simple monophonic sequencer. You can sync this sequencer to the host bpm, use 
 	] , [
 		a atom:AtomPort, lv2:InputPort;
 		atom:bufferType atom:Sequence;
-		atom:supports time:Position;
+		atom:supports time:Position, midi:MidiEvent;
 		lv2:index 110;
 		lv2:symbol "control";
 		lv2:name "Control";
