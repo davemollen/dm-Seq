@@ -171,6 +171,8 @@
     transform: translate(-50%, 0%);
     color: #ECECEC;
     pointer-events: none;
+    width: 56px;
+    text-align: center;
 }
 
 .mod-pedal{{{cns}}} .mod-knob .mod-param-title {

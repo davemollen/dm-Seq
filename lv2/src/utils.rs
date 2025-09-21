@@ -83,7 +83,7 @@ impl DmSeq {
       ports.note_length_15.get(),
       ports.note_length_16.get(),
     ]
-    .map(|note_length| (note_length * 0.01) as f64);
+    .map(|note_length| note_length as f64);
     let chance = [
       ports.chance_1.get(),
       ports.chance_2.get(),
