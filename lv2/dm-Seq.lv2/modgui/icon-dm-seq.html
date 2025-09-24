@@ -1124,6 +1124,7 @@
       <div class="row gates">
         <div class="space-before-grid">
           <div>
+            <div class="mod-param-title">TRIGGER</div>
             <div
               class="mod-footswitch"
               mod-role="input-control-port"
@@ -1131,7 +1132,6 @@
             >
               <div class="mod-light"></div>
             </div>
-            <div class="mod-param-title">TRIGGER</div>
           </div>
         </div>
 
@@ -1257,24 +1257,37 @@
     </div>
     <div class="column global-controls">
       <div class="row gap-16">
-        <div class="column align-self-center">
+        <div class="column gap-24 align-self-center">
           <div class="mod-knob">
+            <div class="mod-param-title">SWING</div>
             <div
               class="mod-knob-image"
               mod-role="input-control-port"
               mod-port-symbol="swing"
             ></div>
-            <div class="mod-param-title">SWING</div>
+            <div
+              class="mod-knob-value"
+              mod-role="input-control-value"
+              contenteditable="false"
+              mod-port-symbol="swing"
+            ></div>
           </div>
           <div class="mod-knob">
+            <div class="mod-param-title">TRANSPOSE</div>
             <div
               class="mod-knob-image"
               mod-role="input-control-port"
               mod-port-symbol="transpose"
             ></div>
-            <div class="mod-param-title">TRANSPOSE</div>
+            <div
+              class="mod-knob-value"
+              mod-role="input-control-value"
+              contenteditable="false"
+              mod-port-symbol="transpose"
+            ></div>
           </div>
           <div>
+            <div class="mod-param-title">PANIC</div>
             <div
               class="mod-footswitch panic"
               mod-role="input-control-port"
@@ -1282,38 +1295,50 @@
             >
               <div class="mod-light"></div>
             </div>
-            <div class="mod-param-title">PANIC</div>
           </div>
         </div>
-        <div class="column align-self-center">
+        <div class="column gap-24 align-self-center">
           <div class="mod-knob">
+            <div class="mod-param-title">STEPS</div>
             <div
               class="mod-knob-image"
               mod-role="input-control-port"
               mod-port-symbol="steps"
             ></div>
-            <div class="mod-param-title">STEPS</div>
+            <div
+              class="mod-knob-value"
+              mod-role="input-control-value"
+              contenteditable="false"
+              mod-port-symbol="steps"
+            ></div>
           </div>
           <div class="mod-knob">
+            <div class="mod-param-title">STEP OFFSET</div>
             <div
               class="mod-knob-image"
               mod-role="input-control-port"
               mod-port-symbol="step_offset"
             ></div>
-            <div class="mod-param-title">STEP OFFSET</div>
+            <div
+              class="mod-knob-value"
+              mod-role="input-control-value"
+              contenteditable="false"
+              mod-port-symbol="step_offset"
+            ></div>
           </div>
           <div class="mod-number-input">
+            <div class="mod-param-title">BPM</div>
             <div
               class="mod-number-input-image"
               mod-role="input-control-port"
               mod-port-symbol="bpm"
             ></div>
-            <div class="mod-param-title">BPM</div>
           </div>
         </div>
-        <div class="column gap-8 justify-between">
+        <div class="column gap-8">
           <div class="mod-enumerated-group-container">
             {{#controls.5}}
+            <div class="mod-param-title">{{name}}</div>
             <div class="mod-enumerated-group first">
               <div
                 class="mod-enumerated"
@@ -1336,11 +1361,11 @@
                 </div>
               </div>
             </div>
-            <div class="mod-param-title">{{name}}</div>
             {{/controls.5}}
           </div>
           <div class="mod-enumerated-group-container">
             {{#controls.6}}
+            <div class="mod-param-title">{{name}}</div>
             <div class="mod-enumerated-group second">
               <div
                 class="mod-enumerated"
@@ -1363,11 +1388,11 @@
                 </div>
               </div>
             </div>
-            <div class="mod-param-title">{{name}}</div>
             {{/controls.6}}
           </div>
           <div class="mod-enumerated-group-container">
             {{#controls.7}}
+            <div class="mod-param-title">{{name}}</div>
             <div class="mod-enumerated-group third">
               <div
                 class="mod-enumerated"
@@ -1390,11 +1415,11 @@
                 </div>
               </div>
             </div>
-            <div class="mod-param-title">{{name}}</div>
             {{/controls.7}}
           </div>
           <div class="mod-enumerated-group-container">
             {{#controls.8}}
+            <div class="mod-param-title">{{name}}</div>
             <div class="mod-enumerated-group fourth">
               <div
                 class="mod-enumerated"
@@ -1417,11 +1442,11 @@
                 </div>
               </div>
             </div>
-            <div class="mod-param-title">{{name}}</div>
             {{/controls.8}}
           </div>
           <div class="mod-enumerated-group-container">
             {{#controls.9}}
+            <div class="mod-param-title">{{name}}</div>
             <div class="mod-enumerated-group fifth">
               <div
                 class="mod-enumerated"
@@ -1444,7 +1469,6 @@
                 </div>
               </div>
             </div>
-            <div class="mod-param-title">{{name}}</div>
             {{/controls.9}}
           </div>
         </div>

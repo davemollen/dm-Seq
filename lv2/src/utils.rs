@@ -234,7 +234,7 @@ impl DmSeq {
     if step_is_an_even_number {
       0.
     } else {
-      ports.swing.get() as f64 * 0.5 * step_duration_in_samples
+      ports.swing.get() as f64 * 0.005 * step_duration_in_samples
     }
   }
 
