@@ -23,6 +23,7 @@ struct Ports {
   clock_mode: InputPort<InPlaceControl>,
   order: InputPort<InPlaceControl>,
   repeat_mode: InputPort<InPlaceControl>,
+  midi_input_channel: InputPort<InPlaceControl>,
   _knob_target: InputPort<InPlaceControl>,
   bpm: InputPort<InPlaceControl>,
   note_1: InputPort<InPlaceControl>,
@@ -162,6 +163,7 @@ struct DmSeq {
   synced_phasor: SyncedPhasor,
   sample_rate: f32,
   midi_notes: MidiNotes,
+  prev_channel: u8,
 }
 
 impl Plugin for DmSeq {
@@ -193,6 +195,7 @@ impl Plugin for DmSeq {
       synced_phasor: SyncedPhasor::new(),
       sample_rate,
       midi_notes: MidiNotes::new(),
+      prev_channel: 0,
     })
   }
 
@@ -202,9 +205,11 @@ impl Plugin for DmSeq {
       self.is_initialized = true;
       self.prev_steps = ports.steps.get() as usize;
       self.prev_clock_mode = ports.clock_mode.get();
+      self.prev_channel = ports.midi_input_channel.get() as u8;
     }
 
     let sequencer_data = self.map_sequencer_data(ports);
+    self.remove_notes_on_channel_change(ports.midi_input_channel.get() as u8);
 
     let control_sequence = match ports
       .control
@@ -216,7 +221,7 @@ impl Plugin for DmSeq {
 
     for (_time_stamp, atom) in control_sequence {
       self.update_transport_position(atom);
-      self.read_midi_events(atom);
+      self.read_midi_events(atom, ports.midi_input_channel.get() as u8);
     }
 
     if ports.clock_mode.get() == 0. && self.host_speed == 0. {

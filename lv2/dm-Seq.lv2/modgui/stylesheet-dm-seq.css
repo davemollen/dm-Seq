@@ -293,18 +293,22 @@
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated-group.first {
-    z-index: 38;
+    z-index: 39;
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated-group.second {
-    z-index: 37;
+    z-index: 38;
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated-group.third {
-    z-index: 36;
+    z-index: 37;
 }
 
 .mod-pedal{{{cns}}} .mod-enumerated-group.fourth {
+    z-index: 36;
+}
+
+.mod-pedal{{{cns}}} .mod-enumerated-group.fifth {
     z-index: 35;
 }
 

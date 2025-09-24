@@ -1420,6 +1420,33 @@
             <div class="mod-param-title">{{name}}</div>
             {{/controls.8}}
           </div>
+          <div class="mod-enumerated-group-container">
+            {{#controls.9}}
+            <div class="mod-enumerated-group fifth">
+              <div
+                class="mod-enumerated"
+                mod-role="input-control-port"
+                mod-port-symbol="{{symbol}}"
+                mod-widget="custom-select"
+              >
+                <div
+                  mod-role="input-control-value"
+                  contenteditable="false"
+                  mod-port-symbol="{{symbol}}"
+                  class="mod-enumerated-selected"
+                ></div>
+                <div class="mod-enumerated-list">
+                  {{#scalePoints}}
+                  <div mod-role="enumeration-option" mod-port-value="{{value}}">
+                    {{label}}
+                  </div>
+                  {{/scalePoints}}
+                </div>
+              </div>
+            </div>
+            <div class="mod-param-title">{{name}}</div>
+            {{/controls.9}}
+          </div>
         </div>
       </div>
       <div class="logo-container">

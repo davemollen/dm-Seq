@@ -172,7 +172,7 @@ impl DmSeq {
     let transpose = self
       .midi_notes
       .get_note()
-      .map_or(ports.transpose.get() as i8, |note| 60 - note as i8);
+      .map_or(ports.transpose.get() as i8, |note| note as i8 - 60);
     let note = (notes[repositioned_step] as i8 + transpose).clamp(0, 127) as u8;
     let velocity = velocities[repositioned_step];
     let note_length = note_lengths[repositioned_step];
@@ -295,23 +295,34 @@ impl DmSeq {
     }
   }
 
-  pub fn read_midi_events(&mut self, atom: UnidentifiedAtom<'static>) {
+  pub fn read_midi_events(&mut self, atom: UnidentifiedAtom<'static>, midi_input_channel: u8) {
     let midi_message = match atom.read(self.urids.midi.wmidi, ()) {
       Some(midi_message) => midi_message,
       None => return,
     };
 
     match midi_message {
-      MidiMessage::NoteOn(_, note, _) => {
-        self.midi_notes.note_on(note.into());
+      MidiMessage::NoteOn(channel, note, _) => {
+        // // midi_input_channel at zero means listen to all channels
+        if midi_input_channel == 0 || channel.number() == midi_input_channel {
+          self.midi_notes.note_on(note.into());
+        }
       }
-      MidiMessage::NoteOff(_, note, _) => {
-        self.midi_notes.note_off(note.into());
+      MidiMessage::NoteOff(channel, note, _) => {
+        // midi_input_channel at zero means listen to all channels
+        if midi_input_channel == 0 || channel.number() == midi_input_channel {
+          self.midi_notes.note_off(note.into());
+        }
       }
-      MidiMessage::ControlChange(_, cc, value) => match u8::from(cc) {
-        64 => self.midi_notes.sustain(u8::from(value) > 0),
-        _ => (),
-      },
+      MidiMessage::ControlChange(channel, cc, value) => {
+        // midi_input_channel at zero means listen to all channels
+        if midi_input_channel == 0 || channel.number() == midi_input_channel {
+          match u8::from(cc) {
+            64 => self.midi_notes.sustain(u8::from(value) > 0),
+            _ => (),
+          }
+        }
+      }
       _ => (),
     };
   }
@@ -324,6 +335,13 @@ impl DmSeq {
     self.event_queue.stop_all_notes();
     self.should_alternate_sequence = true;
     self.synced_phasor.reset();
+  }
+
+  pub fn remove_notes_on_channel_change(&mut self, channel: u8) {
+    if channel != self.prev_channel {
+      self.midi_notes.remove_notes();
+      self.prev_channel = channel;
+    }
   }
 
   pub fn midi_panic(&mut self, midi_out_sequence: &mut SequenceWriter<'static, '_>) {
