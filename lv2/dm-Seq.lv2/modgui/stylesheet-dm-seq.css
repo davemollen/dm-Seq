@@ -30,12 +30,12 @@
     gap: 8px;
 }
 
-.mod-pedal{{{cns}}} .gap-16 {
-    gap: 16px;
+.mod-pedal{{{cns}}} .gap-12 {
+    gap: 12px;
 }
 
-.mod-pedal{{{cns}}} .gap-24 {
-    gap: 24px;
+.mod-pedal{{{cns}}} .gap-16 {
+    gap: 16px;
 }
 
 .mod-pedal{{{cns}}} .space-before-grid {
@@ -58,12 +58,16 @@
     flex: 1;
     align-items: center;
     justify-content: space-between;
-    padding: 16px;
     border-right: 2px solid #797979;
 }
 
 .mod-pedal{{{cns}}} .knobs {
     border-bottom: 2px solid #797979;
+    padding: 24px 16px 16px;
+}
+
+.mod-pedal{{{cns}}} .gates {
+    padding: 16px 16px 24px;
 }
 
 .mod-pedal{{{cns}}} .global-controls {
@@ -101,6 +105,10 @@
     line-height: 18px;
 }
 
+.mod-pedal{{{cns}}} .knobs .mod-knob-value {
+    font-weight: 600 !important;
+}
+
 /* = CONTAINER
 ================================================ */
 .mod-pedal{{{cns}}} {
@@ -108,7 +116,7 @@
     display: flex;
     flex-direction: column;
     width: 1154px;
-    height: 462px;
+    height: 496px;
     border-radius: 8px;
     padding: 8px;
 }
@@ -157,16 +165,15 @@
 }
 
 .mod-pedal{{{cns}}} .mod-knob .mod-knob-value {
-    position: absolute;
-    bottom: -14px;
-    left: 50%;
-    font-size: 11px;
-    font-weight: 600;
-    transform: translate(-50%, 0%);
+    margin: 0 auto;
+    font-size: 10px;
+    line-height: 10px;
+    font-weight: 500;
     color: #ECECEC;
     pointer-events: none;
     width: 56px;
     text-align: center;
+    margin-top: 1px;
 }
 
 /* = FOOTSWITCH
@@ -179,7 +186,7 @@
     background-size:auto 128px;
     cursor:pointer;
     height:64px;
-    width: 64px;
+    width:64px;
 }
 .mod-pedal{{{cns}}} .mod-footswitch.on {
     background-position: top center !important;
@@ -199,8 +206,9 @@
 .mod-pedal{{{cns}}} .mod-footswitch.on > .mod-light {
     background-position-y: top !important;
 }
-.mod-pedal{{{cns}}} .footswitches .mod-param-title {
-    margin-top: 8px;
+.mod-pedal{{{cns}}} .mod-footswitch + .mod-param-title {
+    margin-top: 4px;
+    margin-bottom: 0px;
 }
 .mod-pedal{{{cns}}} .mod-footswitch.bypass.on > .mod-light {
     background-position-y: bottom !important;
@@ -215,8 +223,10 @@
     background-position-y: top !important;
 }
 .mod-pedal{{{cns}}} .mod-footswitch.panic {
-    margin-top: -12px;
-    transform: scale(0.6);
+    background-image:url(/resources/assets/button.png{{{ns}}});
+    background-size:auto 80px;
+    height:40px;
+    width:40px;
 }
 
 /* = TOGGLE
@@ -247,10 +257,6 @@
 
 /* = NUMBER INPUT
 ================================================ */
-.mod-pedal{{{cns}}} .mod-number-input {
-    padding: 4px 0px;
-}
-
 .mod-pedal{{{cns}}} .mod-number-input .mod-number-input-image {
     background-image:url(/resources/assets/number-input.png{{{ns}}});
     background-repeat:no-repeat;
